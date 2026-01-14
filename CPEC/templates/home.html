@@ -1,33 +1,104 @@
 {% extends "base.html" %}
+
 {% block content %}
-<div class="welcome">Bem-vindo(a), {{ nome_usuario }}!</div>
 
-<div class="search">
-    <input type="text" placeholder="Pesquisar..." id="searchInput">
+<style>
+    .welcome-box {
+        background: linear-gradient(135deg, #0d6efd, #084298);
+        color: white;
+        padding: 40px;
+        border-radius: 16px;
+        margin-bottom: 30px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .welcome-box h2 {
+        font-size: 36px;
+        margin-bottom: 10px;
+    }
+
+    .welcome-box p {
+        font-size: 18px;
+        opacity: 0.95;
+    }
+
+    .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+    }
+
+    .menu-card {
+        background: white;
+        border-radius: 14px;
+        padding: 25px;
+        text-align: center;
+        text-decoration: none;
+        color: #333;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        transition: all 0.25s ease;
+        font-weight: 600;
+    }
+
+    .menu-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 14px 30px rgba(0,0,0,0.15);
+        color: #0d6efd;
+    }
+
+    .menu-card span {
+        display: block;
+        font-size: 42px;
+        margin-bottom: 10px;
+    }
+</style>
+
+<div class="welcome-box">
+    <h2>Bem-vindo, {{ nome_usuario }} 👋</h2>
+    <p>Escolha abaixo o que você deseja fazer hoje</p>
 </div>
 
-<div class="menu">
-    <a href="{{ url_for('cadastro') }}">Cadastro de Produtos</a>
-    <a href="{{ url_for('producao') }}">Produção</a>
-    <a href="{{ url_for('movimentacoes') }}">Movimentações</a>
-    <a href="{{ url_for('despesas') }}">Despesas</a>
-    <a href="{{ url_for('funcionarios') }}">Funcionários</a>
-    <a href="{{ url_for('ponto') }}">Ponto</a>
-    <a href="{{ url_for('exportar') }}">Exportar Estoque</a>
-    <a href="{{ url_for('logout') }}">Sair</a>
+<div class="menu-grid">
+    <a class="menu-card" href="{{ url_for('cadastro') }}">
+        <span>📦</span>
+        Cadastro de Produtos
+    </a>
+
+    <a class="menu-card" href="{{ url_for('producao') }}">
+        <span>🏭</span>
+        Produção
+    </a>
+
+    <a class="menu-card" href="{{ url_for('movimentacoes') }}">
+        <span>🔄</span>
+        Movimentações
+    </a>
+
+    <a class="menu-card" href="{{ url_for('despesas') }}">
+        <span>💰</span>
+        Despesas
+    </a>
+
+    <a class="menu-card" href="{{ url_for('funcionarios') }}">
+        <span>👷</span>
+        Funcionários
+    </a>
+
+    <a class="menu-card" href="{{ url_for('ponto') }}">
+        <span>📅</span>
+        Controle de Ponto
+    </a>
+
+    <a class="menu-card" href="{{ url_for('exportar') }}">
+        <span>📊</span>
+        Exportar Estoque
+    </a>
+
+    <a class="menu-card" href="{{ url_for('logout') }}">
+        <span>🚪</span>
+        Sair
+    </a>
 </div>
 
-<script>
-document.getElementById('searchInput').addEventListener('input', function() {
-    let filter = this.value.toLowerCase();
-    let links = document.querySelectorAll('.menu a');
-    links.forEach(link => {
-        if (link.textContent.toLowerCase().includes(filter)) {
-            link.style.display = 'inline-block';
-        } else {
-            link.style.display = 'none';
-        }
-    });
-});
-</script>
 {% endblock %}
