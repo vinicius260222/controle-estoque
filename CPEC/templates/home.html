@@ -2,71 +2,156 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Home - Controle CPEC</title>
+    <title>Controle CPEC - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f8;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to right, #2980b9, #6dd5fa);
+            color: #fff;
+        }
+        header {
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+        }
+        header h1 {
+            font-size: 3em;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        header p {
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .dashboard {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            margin: 20px auto;
+            max-width: 900px;
+        }
+        .card, .dashboard .card {
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            width: 200px;
+            height: 120px;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            justify-content: flex-start;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
             text-align: center;
-            font-size: 3em;
-            margin-bottom: 40px;
-            color: #2c3e50;
+            transition: 0.3s;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeSlide 0.6s forwards;
         }
-        .usuario {
-            margin-bottom: 30px;
-            font-size: 1.2em;
-            color: #34495e;
+        .card:hover {
+            background-color: rgba(255,255,255,0.2);
+            transform: translateY(-5px);
         }
-        .menu {
+        .card i {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .card span {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            width: 100%;
-            max-width: 800px;
-        }
-        .menu button {
-            padding: 20px;
-            font-size: 1.2em;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .menu button:hover {
-            background-color: #2980b9;
+            max-width: 900px;
+            margin: 40px auto;
         }
         .logout {
-            margin-top: 40px;
+            display: block;
+            width: 200px;
+            margin: 0 auto 50px auto;
+            padding: 12px;
             background-color: #e74c3c;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: 0.3s;
         }
         .logout:hover {
             background-color: #c0392b;
         }
+
+        /* ----------------- ANIMAÇÃO ----------------- */
+        @keyframes fadeSlide {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Delay incremental para os cards */
+        .cards .card:nth-child(1) { animation-delay: 0.1s; }
+        .cards .card:nth-child(2) { animation-delay: 0.2s; }
+        .cards .card:nth-child(3) { animation-delay: 0.3s; }
+        .cards .card:nth-child(4) { animation-delay: 0.4s; }
+        .cards .card:nth-child(5) { animation-delay: 0.5s; }
+        .dashboard .card:nth-child(1) { animation-delay: 0s; }
+        .dashboard .card:nth-child(2) { animation-delay: 0.1s; }
+        .dashboard .card:nth-child(3) { animation-delay: 0.2s; }
     </style>
+    <script src="https://kit.fontawesome.com/a81368914c.js" crossorigin="anonymous"></script>
 </head>
 <body>
+
+<header>
     <h1>CONTROLE CPEC</h1>
-    <div class="usuario">Usuário logado: {{ usuario }}</div>
+    <p>Bem-vindo, {{ usuario }}</p>
+</header>
 
-    <div class="menu">
-        <button onclick="window.location.href='{{ url_for('cadastro') }}'">Cadastro de Produtos</button>
-        <button onclick="window.location.href='{{ url_for('producao') }}'">Registrar Produção</button>
-        <button onclick="window.location.href='{{ url_for('movimentacoes') }}'">Movimentações</button>
-        <button onclick="window.location.href='{{ url_for('despesas') }}'">Despesas</button>
-        <button onclick="window.location.href='{{ url_for('exportar') }}'">Exportar Estoque</button>
+<div class="dashboard">
+    <div class="card">
+        <i class="fas fa-box"></i>
+        <span>Produtos: {{ estoque|length }}</span>
     </div>
+    <div class="card">
+        <i class="fas fa-money-bill-wave"></i>
+        <span>Saldo: R$ {{ caixa }}</span>
+    </div>
+    <div class="card">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Movimentações: {{ movimentos|length }}</span>
+    </div>
+</div>
 
-    <button class="logout" onclick="window.location.href='{{ url_for('logout') }}'">Sair</button>
+<div class="cards">
+    <div class="card" onclick="window.location.href='{{ url_for('cadastro') }}'">
+        <i class="fas fa-plus-square"></i>
+        <span>Cadastro de Produtos</span>
+    </div>
+    <div class="card" onclick="window.location.href='{{ url_for('producao') }}'">
+        <i class="fas fa-industry"></i>
+        <span>Registrar Produção</span>
+    </div>
+    <div class="card" onclick="window.location.href='{{ url_for('movimentacoes') }}'">
+        <i class="fas fa-list"></i>
+        <span>Movimentações</span>
+    </div>
+    <div class="card" onclick="window.location.href='{{ url_for('despesas') }}'">
+        <i class="fas fa-receipt"></i>
+        <span>Despesas</span>
+    </div>
+    <div class="card" onclick="window.location.href='{{ url_for('exportar') }}'">
+        <i class="fas fa-file-excel"></i>
+        <span>Exportar Estoque</span>
+    </div>
+</div>
+
+<button class="logout" onclick="window.location.href='{{ url_for('logout') }}'">Sair</button>
+
 </body>
 </html>
