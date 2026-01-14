@@ -7,13 +7,14 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "chave-secreta-super-segura")
 
-# ------------------- PASTA DE ARMAZENAMENTO TEMPORÁRIA -------------------
-DATA_DIR = "/tmp/cpec_data"  # Para teste no Render
+# ------------------- PASTA DE ARMAZENAMENTO -------------------
+DATA_DIR = "/tmp/cpec_data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
 ARQUIVO_ESTOQUE = os.path.join(DATA_DIR, "estoque.json")
 ARQUIVO_CAIXA = os.path.join(DATA_DIR, "caixa.json")
 ARQUIVO_USUARIOS = os.path.join(DATA_DIR, "usuarios.json")
+ARQUIVO_NOMES = os.path.join(DATA_DIR, "nomes.json")
 ARQUIVO_MOVIMENTOS = os.path.join(DATA_DIR, "movimentos.json")
 ARQUIVO_DESPESAS = os.path.join(DATA_DIR, "despesas.json")
 
@@ -30,7 +31,6 @@ def carregar_json(arquivo, padrao):
 def salvar_json(arquivo, dados):
     with open(arquivo, "w", encoding="utf-8") as f:
         json.dump(dados, f, indent=4, ensure_ascii=False)
-    print(f"[INFO] Salvo {arquivo} com {len(str(dados))} caracteres")
 
 def carregar_usuarios():
     padrao = {
@@ -43,6 +43,18 @@ def carregar_usuarios():
         usuarios = padrao
         salvar_json(ARQUIVO_USUARIOS, usuarios)
     return {str(k): str(v) for k, v in usuarios.items()}
+
+def carregar_nomes():
+    padrao = {
+        "04932346913": "Carlos",
+        "00766969959": "Fernanda",
+        "13455528902": "Vinicius"
+    }
+    nomes = carregar_json(ARQUIVO_NOMES, padrao)
+    if not isinstance(nomes, dict) or not nomes:
+        nomes = padrao
+        salvar_json(ARQUIVO_NOMES, nomes)
+    return {str(k): str(v) for k, v in nomes.items()}
 
 def registrar_movimento(produto, quantidade, tipo, usuario):
     movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
@@ -70,7 +82,7 @@ def registrar_despesa(descricao, empresa, valor, pagamento, vencimento, usuario)
 
 # ------------------- ROTAS -------------------
 
-# Raiz redireciona sempre para login
+# Raiz redireciona para login
 @app.route("/", methods=["GET"])
 def raiz():
     return redirect(url_for("login"))
@@ -80,11 +92,13 @@ def raiz():
 def login():
     erro = None
     usuarios = carregar_usuarios()
+    nomes = carregar_nomes()
     if request.method == "POST":
         usuario = request.form.get("usuario", "").strip()
         senha = request.form.get("senha", "").strip()
         if usuario in usuarios and usuarios[usuario] == senha:
             session["usuario"] = usuario
+            session["nome_usuario"] = nomes.get(usuario, usuario)
             return redirect(url_for("home"))
         else:
             erro = "CPF ou data de nascimento incorretos"
@@ -104,13 +118,12 @@ def home():
     estoque = carregar_json(ARQUIVO_ESTOQUE, {})
     caixa = carregar_json(ARQUIVO_CAIXA, {"saldo": 0})
     movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
-    return render_template(
-        "home.html",
-        usuario=session["usuario"],
-        estoque=estoque,
-        caixa=caixa["saldo"],
-        movimentos=movimentos
-    )
+    return render_template("home.html",
+                           usuario=session["usuario"],
+                           nome_usuario=session["nome_usuario"],
+                           estoque=estoque,
+                           caixa=caixa["saldo"],
+                           movimentos=movimentos)
 
 # ------------------- Cadastro de Produtos -------------------
 @app.route("/cadastro", methods=["GET", "POST"])
@@ -131,7 +144,7 @@ def cadastro():
             estoque[nome]["fornecedor"] = fornecedor
         salvar_json(ARQUIVO_ESTOQUE, estoque)
         return redirect(url_for("cadastro"))
-    return render_template("cadastro.html", estoque=estoque, usuario=session["usuario"])
+    return render_template("cadastro.html", estoque=estoque, nome_usuario=session["nome_usuario"])
 
 # ------------------- Produção -------------------
 @app.route("/producao", methods=["GET", "POST"])
@@ -156,9 +169,9 @@ def producao():
             caixa["saldo"] += quantidade * preco
         salvar_json(ARQUIVO_ESTOQUE, estoque)
         salvar_json(ARQUIVO_CAIXA, caixa)
-        registrar_movimento(nome, quantidade, tipo, session["usuario"])
+        registrar_movimento(nome, quantidade, tipo, session["nome_usuario"])
         return redirect(url_for("producao"))
-    return render_template("producao.html", estoque=estoque, caixa=caixa["saldo"], usuario=session["usuario"])
+    return render_template("producao.html", estoque=estoque, caixa=caixa["saldo"], nome_usuario=session["nome_usuario"])
 
 # ------------------- Movimentações -------------------
 @app.route("/movimentacoes", methods=["GET"])
@@ -166,7 +179,7 @@ def movimentacoes():
     if "usuario" not in session:
         return redirect(url_for("login"))
     movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
-    return render_template("movimentacoes.html", movimentos=movimentos, usuario=session["usuario"])
+    return render_template("movimentacoes.html", movimentos=movimentos, nome_usuario=session["nome_usuario"])
 
 # ------------------- Despesas -------------------
 @app.route("/despesas", methods=["GET", "POST"])
@@ -180,9 +193,9 @@ def despesas():
         valor = float(request.form.get("valor", 0))
         pagamento = request.form.get("pagamento")
         vencimento = request.form.get("vencimento", "").strip()
-        registrar_despesa(descricao, empresa, valor, pagamento, vencimento, session["usuario"])
+        registrar_despesa(descricao, empresa, valor, pagamento, vencimento, session["nome_usuario"])
         return redirect(url_for("despesas"))
-    return render_template("despesas.html", despesas=despesas_lista, usuario=session["usuario"])
+    return render_template("despesas.html", despesas=despesas_lista, nome_usuario=session["nome_usuario"])
 
 # ------------------- Exportar Estoque -------------------
 @app.route("/exportar")
@@ -208,3 +221,4 @@ def exportar():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
