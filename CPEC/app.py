@@ -11,12 +11,15 @@ app.secret_key = os.environ.get("SECRET_KEY", "chave-secreta-super-segura")
 DATA_DIR = "/tmp/cpec_data"
 os.makedirs(DATA_DIR, exist_ok=True)
 
+# Arquivos JSON
 ARQUIVO_ESTOQUE = os.path.join(DATA_DIR, "estoque.json")
 ARQUIVO_CAIXA = os.path.join(DATA_DIR, "caixa.json")
 ARQUIVO_USUARIOS = os.path.join(DATA_DIR, "usuarios.json")
 ARQUIVO_NOMES = os.path.join(DATA_DIR, "nomes.json")
 ARQUIVO_MOVIMENTOS = os.path.join(DATA_DIR, "movimentos.json")
 ARQUIVO_DESPESAS = os.path.join(DATA_DIR, "despesas.json")
+ARQUIVO_FUNCIONARIOS = os.path.join(DATA_DIR, "funcionarios.json")
+ARQUIVO_PONTO = os.path.join(DATA_DIR, "ponto.json")
 
 # ------------------- FUNÇÕES AUXILIARES -------------------
 def carregar_json(arquivo, padrao):
@@ -32,6 +35,7 @@ def salvar_json(arquivo, dados):
     with open(arquivo, "w", encoding="utf-8") as f:
         json.dump(dados, f, indent=4, ensure_ascii=False)
 
+# ------------------- Usuários e Nomes -------------------
 def carregar_usuarios():
     padrao = {
         "04932346913": "02111982",
@@ -39,9 +43,9 @@ def carregar_usuarios():
         "13455528902": "06102006"
     }
     usuarios = carregar_json(ARQUIVO_USUARIOS, padrao)
-    if not isinstance(usuarios, dict) or not usuarios:
+    if not usuarios:
+        salvar_json(ARQUIVO_USUARIOS, padrao)
         usuarios = padrao
-        salvar_json(ARQUIVO_USUARIOS, usuarios)
     return {str(k): str(v) for k, v in usuarios.items()}
 
 def carregar_nomes():
@@ -51,11 +55,12 @@ def carregar_nomes():
         "13455528902": "Vinicius"
     }
     nomes = carregar_json(ARQUIVO_NOMES, padrao)
-    if not isinstance(nomes, dict) or not nomes:
+    if not nomes:
+        salvar_json(ARQUIVO_NOMES, padrao)
         nomes = padrao
-        salvar_json(ARQUIVO_NOMES, nomes)
     return {str(k): str(v) for k, v in nomes.items()}
 
+# ------------------- Movimentos -------------------
 def registrar_movimento(produto, quantidade, tipo, usuario):
     movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
     movimentos.append({
@@ -67,6 +72,7 @@ def registrar_movimento(produto, quantidade, tipo, usuario):
     })
     salvar_json(ARQUIVO_MOVIMENTOS, movimentos)
 
+# ------------------- Despesas -------------------
 def registrar_despesa(descricao, empresa, valor, pagamento, vencimento, usuario):
     despesas = carregar_json(ARQUIVO_DESPESAS, [])
     despesas.append({
@@ -79,6 +85,19 @@ def registrar_despesa(descricao, empresa, valor, pagamento, vencimento, usuario)
         "data": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     })
     salvar_json(ARQUIVO_DESPESAS, despesas)
+
+# ------------------- Funcionários -------------------
+def carregar_funcionarios():
+    return carregar_json(ARQUIVO_FUNCIONARIOS, {})
+
+def salvar_funcionarios(funcionarios):
+    salvar_json(ARQUIVO_FUNCIONARIOS, funcionarios)
+
+def carregar_ponto():
+    return carregar_json(ARQUIVO_PONTO, {})
+
+def salvar_ponto(ponto):
+    salvar_json(ARQUIVO_PONTO, ponto)
 
 # ------------------- ROTAS -------------------
 
@@ -110,20 +129,12 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# Home / Lobby
+# ------------------- Home / Painel -------------------
 @app.route("/home", methods=["GET"])
 def home():
     if "usuario" not in session:
         return redirect(url_for("login"))
-    estoque = carregar_json(ARQUIVO_ESTOQUE, {})
-    caixa = carregar_json(ARQUIVO_CAIXA, {"saldo": 0})
-    movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
-    return render_template("home.html",
-                           usuario=session["usuario"],
-                           nome_usuario=session["nome_usuario"],
-                           estoque=estoque,
-                           caixa=caixa["saldo"],
-                           movimentos=movimentos)
+    return render_template("home.html", nome_usuario=session["nome_usuario"])
 
 # ------------------- Cadastro de Produtos -------------------
 @app.route("/cadastro", methods=["GET", "POST"])
@@ -197,6 +208,59 @@ def despesas():
         return redirect(url_for("despesas"))
     return render_template("despesas.html", despesas=despesas_lista, nome_usuario=session["nome_usuario"])
 
+# ------------------- Funcionários -------------------
+@app.route("/funcionarios", methods=["GET", "POST"])
+def funcionarios():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+    
+    funcionarios_data = carregar_funcionarios()
+
+    if request.method == "POST":
+        cpf = request.form.get("cpf", "").strip()
+        nome = request.form.get("nome", "").strip()
+        idade = request.form.get("idade", "").strip()
+        data_inicio = request.form.get("data_inicio", "").strip()
+        cargo = request.form.get("cargo", "").strip()
+        observacoes = request.form.get("observacoes", "").strip()
+        
+        if cpf and nome:
+            funcionarios_data[cpf] = {
+                "nome": nome,
+                "idade": idade,
+                "cpf": cpf,
+                "data_inicio": data_inicio,
+                "cargo": cargo,
+                "observacoes": observacoes
+            }
+            salvar_funcionarios(funcionarios_data)
+        return redirect(url_for("funcionarios"))
+    
+    return render_template("funcionarios.html", funcionarios=funcionarios_data, nome_usuario=session["nome_usuario"])
+
+# ------------------- Ponto -------------------
+@app.route("/ponto", methods=["GET", "POST"])
+def ponto():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    funcionarios_data = carregar_funcionarios()
+    ponto_data = carregar_ponto()
+
+    if request.method == "POST":
+        cpf = request.form.get("cpf", "").strip()
+        data = request.form.get("data", "").strip()
+        status = request.form.get("status", "").strip()  # Trabalhou / Vai trabalhar
+
+        if cpf in funcionarios_data:
+            if cpf not in ponto_data:
+                ponto_data[cpf] = []
+            ponto_data[cpf].append({"data": data, "status": status})
+            salvar_ponto(ponto_data)
+        return redirect(url_for("ponto"))
+
+    return render_template("ponto.html", funcionarios=funcionarios_data, ponto=ponto_data, nome_usuario=session["nome_usuario"])
+
 # ------------------- Exportar Estoque -------------------
 @app.route("/exportar")
 def exportar():
@@ -221,4 +285,3 @@ def exportar():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
