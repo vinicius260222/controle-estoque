@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Estoque</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="app">
+
+    <header>
+        <h1>📦 Controle de Estoque</h1>
+    </header>
+
+    <div class="caixa">
+        💰 Caixa: <strong>R$ {{ "%.2f"|format(caixa) }}</strong>
+    </div>
+
+    <form method="POST">
+        <input type="text" name="nome" placeholder="Nome do produto" required>
+        <input type="number" name="quantidade" placeholder="Quantidade" required>
+        <input type="number" step="0.01" name="preco" placeholder="Preço unitário" required>
+
+        <select name="tipo">
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+        </select>
+
+        <button type="submit">Salvar</button>
+    </form>
+
+    <h3 style="margin-top:20px;">📋 Produtos</h3>
+
+    {% for nome, dados in estoque.items() %}
+        <div class="produto">
+            <strong>{{ nome }}</strong><br>
+            Quantidade: {{ dados.quantidade }}<br>
+            Preço: R$ {{ "%.2f"|format(dados.preco) }}
+        </div>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>
+<a href="/exportar">
+    <button style="margin-top:10px; background:#2e7d32;">
+        📊 Exportar Excel
+    </button>
+</a>
