@@ -12,9 +12,9 @@ ARQUIVO_ESTOQUE = "estoque.json"
 ARQUIVO_USUARIOS = "usuarios.json"
 ARQUIVO_CAIXA = "caixa.json"
 ARQUIVO_MOVIMENTOS = "movimentos.json"
+ARQUIVO_DESPESAS = "despesas.json"
 
 # ---------- FUNÇÕES AUXILIARES ----------
-
 def carregar_json(arquivo, padrao):
     """Carrega qualquer JSON de forma segura."""
     if os.path.exists(arquivo):
@@ -34,7 +34,6 @@ def carregar_usuarios():
     usuarios = carregar_json(ARQUIVO_USUARIOS, {})
     if not isinstance(usuarios, dict):
         return {}
-    # garante que chaves e valores sejam strings
     return {str(k): str(v) for k, v in usuarios.items()}
 
 def registrar_movimento(produto, quantidade, tipo, usuario):
@@ -47,6 +46,19 @@ def registrar_movimento(produto, quantidade, tipo, usuario):
         "data": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
     })
     salvar_json(ARQUIVO_MOVIMENTOS, movimentos)
+
+def registrar_despesa(descricao, empresa, valor, pagamento, vencimento, usuario):
+    despesas = carregar_json(ARQUIVO_DESPESAS, [])
+    despesas.append({
+        "descricao": descricao,
+        "empresa": empresa,
+        "valor": valor,
+        "pagamento": pagamento,
+        "vencimento": vencimento if pagamento == "prazo" else "",
+        "usuario": usuario,
+        "data": datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+    })
+    salvar_json(ARQUIVO_DESPESAS, despesas)
 
 # ---------- ROTAS ----------
 
@@ -61,13 +73,12 @@ def login():
     erro = None
     usuarios = carregar_usuarios()
     if not usuarios:
-        # Cria admin padrão se JSON vazio ou inválido
         usuarios = {"12345678900": "01011990"}
         salvar_json(ARQUIVO_USUARIOS, usuarios)
 
     if request.method == "POST":
-        usuario = request.form.get("usuario", "").strip()  # CPF
-        senha = request.form.get("senha", "").strip()      # Data de nascimento ddmmaaaa
+        usuario = request.form.get("usuario", "").strip()
+        senha = request.form.get("senha", "").strip()
         if usuario in usuarios and usuarios[usuario] == senha:
             session["usuario"] = usuario
             return redirect(url_for("home"))
@@ -81,7 +92,6 @@ def logout():
     return redirect(url_for("login"))
 
 # ---------------- Cadastro de produtos ----------------
-
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if "usuario" not in session:
@@ -95,7 +105,6 @@ def cadastro():
         if nome not in estoque:
             estoque[nome] = {"quantidade": 0, "preco": preco, "categoria": categoria, "fornecedor": fornecedor}
         else:
-            # Atualiza info de cadastro se já existe
             estoque[nome]["preco"] = preco
             estoque[nome]["categoria"] = categoria
             estoque[nome]["fornecedor"] = fornecedor
@@ -104,7 +113,6 @@ def cadastro():
     return render_template("cadastro.html", estoque=estoque, usuario=session["usuario"])
 
 # ---------------- Registrar produções ----------------
-
 @app.route("/producao", methods=["GET", "POST"])
 def producao():
     if "usuario" not in session:
@@ -132,7 +140,6 @@ def producao():
     return render_template("producao.html", estoque=estoque, caixa=caixa["saldo"], usuario=session["usuario"])
 
 # ---------------- Movimentações ----------------
-
 @app.route("/movimentacoes", methods=["GET"])
 def movimentacoes():
     if "usuario" not in session:
@@ -140,8 +147,23 @@ def movimentacoes():
     movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
     return render_template("movimentacoes.html", movimentos=movimentos, usuario=session["usuario"])
 
-# ---------------- Exportar Estoque ----------------
+# ---------------- Despesas ----------------
+@app.route("/despesas", methods=["GET", "POST"])
+def despesas():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+    despesas_lista = carregar_json(ARQUIVO_DESPESAS, [])
+    if request.method == "POST":
+        descricao = request.form.get("descricao", "").strip()
+        empresa = request.form.get("empresa", "").strip()
+        valor = float(request.form.get("valor", 0))
+        pagamento = request.form.get("pagamento")
+        vencimento = request.form.get("vencimento", "").strip()
+        registrar_despesa(descricao, empresa, valor, pagamento, vencimento, session["usuario"])
+        return redirect(url_for("despesas"))
+    return render_template("despesas.html", despesas=despesas_lista, usuario=session["usuario"])
 
+# ---------------- Exportar Estoque ----------------
 @app.route("/exportar")
 def exportar():
     if "usuario" not in session:
