@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Movimentações - CPEC</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color:#f4f4f9; padding:20px; }
+h1 { color:#4A90E2; text-align:center; margin-bottom:20px; }
+table { width:100%; border-collapse:collapse; }
+table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
+table th { background-color:#f0f0f5; }
+table tr:nth-child(even) { background-color:#f9f9f9; }
+table tr:hover { background-color:#e0f0ff; }
+a { display:inline-block; margin-top:15px; color:#4A90E2; text-decoration:none; }
+</style>
+</head>
+<body>
+<h1>Entradas e Saídas</h1>
+<table>
+<thead>
+<tr><th>Produto</th><th>Quantidade</th><th>Tipo</th><th>Data</th></tr>
+</thead>
+<tbody>
+{% for mov in movimentos %}
+<tr>
+<td>{{ mov.produto }}</td>
+<td>{{ mov.quantidade }}</td>
+<td>{{ mov.tipo }}</td>
+<td>{{ mov.data }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<a href="{{ url_for('home') }}">Voltar ao Home</a>
+</body>
+</html>
