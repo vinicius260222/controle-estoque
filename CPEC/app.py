@@ -7,10 +7,9 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "chave-secreta-super-segura")
 
-# ------------------- PASTA PERSISTENTE -------------------
-DATA_DIR = os.environ.get("DATA_DIR", "/mnt/data")  # Render: /mnt/data
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
+# ------------------- PASTA DE ARMAZENAMENTO TEMPORÁRIA -------------------
+DATA_DIR = "/tmp/cpec_data"  # Para teste no Render
+os.makedirs(DATA_DIR, exist_ok=True)
 
 ARQUIVO_ESTOQUE = os.path.join(DATA_DIR, "estoque.json")
 ARQUIVO_CAIXA = os.path.join(DATA_DIR, "caixa.json")
@@ -74,11 +73,9 @@ def registrar_despesa(descricao, empresa, valor, pagamento, vencimento, usuario)
 def home():
     if "usuario" not in session:
         return redirect(url_for("login"))
-
     estoque = carregar_json(ARQUIVO_ESTOQUE, {})
     caixa = carregar_json(ARQUIVO_CAIXA, {"saldo": 0})
     movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
-
     return render_template(
         "home.html",
         usuario=session["usuario"],
@@ -106,7 +103,7 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# ------------------- Cadastro -------------------
+# ------------------- Cadastro de Produtos -------------------
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if "usuario" not in session:
@@ -178,7 +175,7 @@ def despesas():
         return redirect(url_for("despesas"))
     return render_template("despesas.html", despesas=despesas_lista, usuario=session["usuario"])
 
-# ------------------- Exportar -------------------
+# ------------------- Exportar Estoque -------------------
 @app.route("/exportar")
 def exportar():
     if "usuario" not in session:
