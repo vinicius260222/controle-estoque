@@ -1,31 +1,72 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Home - CPEC</title>
-<style>
-body { background: linear-gradient(135deg, #4A90E2, #50E3C2); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; }
-.container { display: flex; flex-direction: column; gap: 30px; text-align: center; }
-h1 { color: white; font-size: 48px; margin-bottom: 40px; }
-.acoes { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-.acoes a { text-decoration: none; color: white; padding: 25px 40px; font-size: 20px; font-weight: bold; border-radius: 12px; transition: transform 0.2s, box-shadow 0.2s; }
-.cadastro { background-color: #F5A623; }
-.producao { background-color: #4A90E2; }
-.movimentacoes { background-color: #50C878; }
-.acoes a:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
-.logout { margin-top: 30px; color: white; text-decoration: underline; cursor: pointer; }
-</style>
+    <meta charset="UTF-8">
+    <title>Home - Controle CPEC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            font-size: 3em;
+            margin-bottom: 40px;
+            color: #2c3e50;
+        }
+        .usuario {
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            color: #34495e;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .menu button {
+            padding: 20px;
+            font-size: 1.2em;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .menu button:hover {
+            background-color: #2980b9;
+        }
+        .logout {
+            margin-top: 40px;
+            background-color: #e74c3c;
+        }
+        .logout:hover {
+            background-color: #c0392b;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-<h1>CPEC - Controle de Estoque</h1>
-<div class="acoes">
-<a href="{{ url_for('cadastro') }}" class="cadastro">Cadastrar Produtos</a>
-<a href="{{ url_for('producao') }}" class="producao">Registrar Produção</a>
-<a href="{{ url_for('movimentacoes') }}" class="movimentacoes">Entradas e Saídas</a>
-</div>
-<a href="{{ url_for('logout') }}" class="logout">Logout</a>
-</div>
+    <h1>CONTROLE CPEC</h1>
+    <div class="usuario">Usuário logado: {{ usuario }}</div>
+
+    <div class="menu">
+        <button onclick="window.location.href='{{ url_for('cadastro') }}'">Cadastro de Produtos</button>
+        <button onclick="window.location.href='{{ url_for('producao') }}'">Registrar Produção</button>
+        <button onclick="window.location.href='{{ url_for('movimentacoes') }}'">Movimentações</button>
+        <button onclick="window.location.href='{{ url_for('despesas') }}'">Despesas</button>
+        <button onclick="window.location.href='{{ url_for('exportar') }}'">Exportar Estoque</button>
+    </div>
+
+    <button class="logout" onclick="window.location.href='{{ url_for('logout') }}'">Sair</button>
 </body>
 </html>
