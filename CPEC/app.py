@@ -21,7 +21,7 @@ def carregar_json(arquivo, padrao):
         try:
             with open(arquivo, "r", encoding="utf-8") as f:
                 return json.load(f)
-        except json.JSONDecodeError:
+        except (json.JSONDecodeError, FileNotFoundError):
             print(f"Erro no {arquivo}: retornando valor padrão")
     return padrao
 
@@ -30,10 +30,18 @@ def salvar_json(arquivo, dados):
         json.dump(dados, f, indent=4, ensure_ascii=False)
 
 def carregar_usuarios():
-    """Carrega usuarios.json de forma segura, retorna dict vazio se houver erro."""
-    usuarios = carregar_json(ARQUIVO_USUARIOS, {})
-    if not isinstance(usuarios, dict):
-        return {}
+    """Garante que o arquivo usuarios.json existe e está correto."""
+    padrao = {
+        "04932346913": "02111982",
+        "00766969959": "01061981",
+        "13455528902": "06102006"
+    }
+    usuarios = carregar_json(ARQUIVO_USUARIOS, padrao)
+    # Se não for dict ou vazio, recria com padrão
+    if not isinstance(usuarios, dict) or not usuarios:
+        usuarios = padrao
+        salvar_json(ARQUIVO_USUARIOS, usuarios)
+    # Garante que chaves e valores sejam string
     return {str(k): str(v) for k, v in usuarios.items()}
 
 def registrar_movimento(produto, quantidade, tipo, usuario):
@@ -72,9 +80,6 @@ def home():
 def login():
     erro = None
     usuarios = carregar_usuarios()
-    if not usuarios:
-        usuarios = {"12345678900": "01011990"}
-        salvar_json(ARQUIVO_USUARIOS, usuarios)
 
     if request.method == "POST":
         usuario = request.form.get("usuario", "").strip()
