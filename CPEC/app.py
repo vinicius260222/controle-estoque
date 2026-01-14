@@ -1,47 +1,48 @@
+import os
 from flask import Flask, render_template, request, redirect, session, url_for, send_file
 from openpyxl import Workbook
 import json
-import os
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "chave-secreta-super-segura")
 
-# ---------- ARQUIVOS ----------
-ARQUIVO_ESTOQUE = "estoque.json"
-ARQUIVO_USUARIOS = "usuarios.json"
-ARQUIVO_CAIXA = "caixa.json"
-ARQUIVO_MOVIMENTOS = "movimentos.json"
-ARQUIVO_DESPESAS = "despesas.json"
+# ------------------- PASTA PERSISTENTE -------------------
+DATA_DIR = os.environ.get("DATA_DIR", "/mnt/data")  # Render: /mnt/data
+if not os.path.exists(DATA_DIR):
+    os.makedirs(DATA_DIR)
 
-# ---------- FUNÇÕES AUXILIARES ----------
+ARQUIVO_ESTOQUE = os.path.join(DATA_DIR, "estoque.json")
+ARQUIVO_CAIXA = os.path.join(DATA_DIR, "caixa.json")
+ARQUIVO_USUARIOS = os.path.join(DATA_DIR, "usuarios.json")
+ARQUIVO_MOVIMENTOS = os.path.join(DATA_DIR, "movimentos.json")
+ARQUIVO_DESPESAS = os.path.join(DATA_DIR, "despesas.json")
+
+# ------------------- FUNÇÕES AUXILIARES -------------------
 def carregar_json(arquivo, padrao):
-    """Carrega qualquer JSON de forma segura."""
     if os.path.exists(arquivo):
         try:
             with open(arquivo, "r", encoding="utf-8") as f:
                 return json.load(f)
-        except (json.JSONDecodeError, FileNotFoundError):
-            print(f"Erro no {arquivo}: retornando valor padrão")
+        except json.JSONDecodeError:
+            print(f"Erro no {arquivo}: retornando padrão")
     return padrao
 
 def salvar_json(arquivo, dados):
     with open(arquivo, "w", encoding="utf-8") as f:
         json.dump(dados, f, indent=4, ensure_ascii=False)
+    print(f"[INFO] Salvo {arquivo} com {len(str(dados))} caracteres")
 
 def carregar_usuarios():
-    """Garante que o arquivo usuarios.json existe e está correto."""
     padrao = {
         "04932346913": "02111982",
         "00766969959": "01061981",
         "13455528902": "06102006"
     }
     usuarios = carregar_json(ARQUIVO_USUARIOS, padrao)
-    # Se não for dict ou vazio, recria com padrão
     if not isinstance(usuarios, dict) or not usuarios:
         usuarios = padrao
         salvar_json(ARQUIVO_USUARIOS, usuarios)
-    # Garante que chaves e valores sejam string
     return {str(k): str(v) for k, v in usuarios.items()}
 
 def registrar_movimento(produto, quantidade, tipo, usuario):
@@ -68,19 +69,28 @@ def registrar_despesa(descricao, empresa, valor, pagamento, vencimento, usuario)
     })
     salvar_json(ARQUIVO_DESPESAS, despesas)
 
-# ---------- ROTAS ----------
-
+# ------------------- ROTAS -------------------
 @app.route("/", methods=["GET"])
 def home():
     if "usuario" not in session:
         return redirect(url_for("login"))
-    return render_template("home.html", usuario=session["usuario"])
+
+    estoque = carregar_json(ARQUIVO_ESTOQUE, {})
+    caixa = carregar_json(ARQUIVO_CAIXA, {"saldo": 0})
+    movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
+
+    return render_template(
+        "home.html",
+        usuario=session["usuario"],
+        estoque=estoque,
+        caixa=caixa["saldo"],
+        movimentos=movimentos
+    )
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     erro = None
     usuarios = carregar_usuarios()
-
     if request.method == "POST":
         usuario = request.form.get("usuario", "").strip()
         senha = request.form.get("senha", "").strip()
@@ -96,7 +106,7 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# ---------------- Cadastro de produtos ----------------
+# ------------------- Cadastro -------------------
 @app.route("/cadastro", methods=["GET", "POST"])
 def cadastro():
     if "usuario" not in session:
@@ -117,7 +127,7 @@ def cadastro():
         return redirect(url_for("cadastro"))
     return render_template("cadastro.html", estoque=estoque, usuario=session["usuario"])
 
-# ---------------- Registrar produções ----------------
+# ------------------- Produção -------------------
 @app.route("/producao", methods=["GET", "POST"])
 def producao():
     if "usuario" not in session:
@@ -144,7 +154,7 @@ def producao():
         return redirect(url_for("producao"))
     return render_template("producao.html", estoque=estoque, caixa=caixa["saldo"], usuario=session["usuario"])
 
-# ---------------- Movimentações ----------------
+# ------------------- Movimentações -------------------
 @app.route("/movimentacoes", methods=["GET"])
 def movimentacoes():
     if "usuario" not in session:
@@ -152,7 +162,7 @@ def movimentacoes():
     movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
     return render_template("movimentacoes.html", movimentos=movimentos, usuario=session["usuario"])
 
-# ---------------- Despesas ----------------
+# ------------------- Despesas -------------------
 @app.route("/despesas", methods=["GET", "POST"])
 def despesas():
     if "usuario" not in session:
@@ -168,7 +178,7 @@ def despesas():
         return redirect(url_for("despesas"))
     return render_template("despesas.html", despesas=despesas_lista, usuario=session["usuario"])
 
-# ---------------- Exportar Estoque ----------------
+# ------------------- Exportar -------------------
 @app.route("/exportar")
 def exportar():
     if "usuario" not in session:
@@ -184,11 +194,11 @@ def exportar():
         ws.append([nome, dados["quantidade"], dados["preco"], total])
     ws.append([])
     ws.append(["", "", "Caixa Total", caixa["saldo"]])
-    caminho = "estoque.xlsx"
+    caminho = os.path.join(DATA_DIR, "estoque.xlsx")
     wb.save(caminho)
     return send_file(caminho, as_attachment=True, download_name="estoque.xlsx")
 
-# ---------- START ----------
+# ------------------- START -------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
