@@ -69,21 +69,13 @@ def registrar_despesa(descricao, empresa, valor, pagamento, vencimento, usuario)
     salvar_json(ARQUIVO_DESPESAS, despesas)
 
 # ------------------- ROTAS -------------------
-@app.route("/", methods=["GET"])
-def home():
-    if "usuario" not in session:
-        return redirect(url_for("login"))
-    estoque = carregar_json(ARQUIVO_ESTOQUE, {})
-    caixa = carregar_json(ARQUIVO_CAIXA, {"saldo": 0})
-    movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
-    return render_template(
-        "home.html",
-        usuario=session["usuario"],
-        estoque=estoque,
-        caixa=caixa["saldo"],
-        movimentos=movimentos
-    )
 
+# Raiz redireciona sempre para login
+@app.route("/", methods=["GET"])
+def raiz():
+    return redirect(url_for("login"))
+
+# Login
 @app.route("/login", methods=["GET", "POST"])
 def login():
     erro = None
@@ -98,10 +90,27 @@ def login():
             erro = "CPF ou data de nascimento incorretos"
     return render_template("login.html", erro=erro)
 
+# Logout
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
+
+# Home / Lobby
+@app.route("/home", methods=["GET"])
+def home():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+    estoque = carregar_json(ARQUIVO_ESTOQUE, {})
+    caixa = carregar_json(ARQUIVO_CAIXA, {"saldo": 0})
+    movimentos = carregar_json(ARQUIVO_MOVIMENTOS, [])
+    return render_template(
+        "home.html",
+        usuario=session["usuario"],
+        estoque=estoque,
+        caixa=caixa["saldo"],
+        movimentos=movimentos
+    )
 
 # ------------------- Cadastro de Produtos -------------------
 @app.route("/cadastro", methods=["GET", "POST"])
