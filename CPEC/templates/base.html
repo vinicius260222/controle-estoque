@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>CPEC - Controle</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<header style="padding: 20px; background:#0d6efd; color:white;">
+    <h1 style="margin:0;">CPEC</h1>
+</header>
+
+<main style="padding: 20px;">
+    {% block content %}{% endblock %}
+</main>
+
+<footer style="text-align:center; padding:10px; font-size:12px; color:#666;">
+    © CPEC - Sistema Interno
+</footer>
+
+</body>
+</html>
