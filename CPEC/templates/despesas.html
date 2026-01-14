@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Despesas - Controle CPEC</title>
+    <style>
+        body { font-family: Arial; background-color: #f4f6f8; padding: 20px; }
+        h1 { text-align: center; color: #2c3e50; }
+        .usuario { text-align: center; margin-bottom: 20px; color: #34495e; }
+        form { display: flex; flex-direction: column; max-width: 400px; margin: 0 auto; gap: 10px; }
+        input, select { padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px; border: none; border-radius: 5px; background-color: #3498db; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #2980b9; }
+        table { margin: 30px auto; border-collapse: collapse; width: 95%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        .voltar { margin-top: 20px; background-color: #e67e22; }
+        .voltar:hover { background-color: #d35400; }
+    </style>
+</head>
+<body>
+    <h1>Despesas</h1>
+    <div class="usuario">Usuário logado: {{ usuario }}</div>
+
+    <form method="POST">
+        <input type="text" name="descricao" placeholder="Descrição do gasto" required>
+        <input type="text" name="empresa" placeholder="Empresa/Fornecedor" required>
+        <input type="number" name="valor" placeholder="Valor (R$)" step="0.01" required>
+
+        <label>Forma de pagamento:</label>
+        <select name="pagamento" id="pagamento" onchange="mostrarVencimento()">
+            <option value="avista">À vista</option>
+            <option value="prazo">A prazo</option>
+        </select>
+
+        <input type="date" name="vencimento" id="vencimento" style="display:none;">
+
+        <button type="submit">Registrar Despesa</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>Descrição</th>
+            <th>Empresa</th>
+            <th>Valor</th>
+            <th>Pagamento</th>
+            <th>Vencimento</th>
+            <th>Usuário</th>
+            <th>Data/Hora</th>
+        </tr>
+        {% for d in despesas %}
+        <tr>
+            <td>{{ d.descricao }}</td>
+            <td>{{ d.empresa }}</td>
+            <td>{{ d.valor }}</td>
+            <td>{{ d.pagamento }}</td>
+            <td>{{ d.vencimento }}</td>
+            <td>{{ d.usuario }}</td>
+            <td>{{ d.data }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <button class="voltar" onclick="window.location.href='{{ url_for('home') }}'">Voltar</button>
+
+    <script>
+        function mostrarVencimento(){
+            var pagamento = document.getElementById("pagamento").value;
+            var venc = document.getElementById("vencimento");
+            venc.style.display = pagamento === "prazo" ? "inline-block" : "none";
+        }
+    </script>
+</body>
+</html>
