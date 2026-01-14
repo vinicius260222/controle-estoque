@@ -1,159 +1,112 @@
-/* Reset básico */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
-}
-
-/* Body geral */
 body {
-  background: #f4f6f8;
-  color: #333;
-  min-height: 100vh;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f6f8;
+    color: #2c3e50;
 }
 
-/* Cabeçalho */
 header {
-  background: #2c3e50;
-  color: #fff;
-  padding: 20px 0;
-  text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background: #3498db;
+    color: white;
+    padding: 20px;
+    text-align: center;
 }
 
-/* Botões e links principais */
-a, button {
-  text-decoration: none;
-  display: inline-block;
-  background: #2980b9;
-  color: #fff;
-  padding: 12px 20px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
-  font-size: 16px;
+h1, h2, h3 {
+    text-align: center;
 }
 
-a:hover, button:hover {
-  background: #3498db;
+main {
+    padding: 20px;
 }
 
-/* Login Box */
-.login-box {
-  background: #fff;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  width: 360px;
-  margin: 100px auto;
-}
-
-.login-box h1 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #2c3e50;
-  font-size: 30px;
-}
-
-/* Inputs */
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 16px;
-}
-
-/* Erros */
-.erro {
-  color: red;
-  text-align: center;
-  margin-top: 10px;
-}
-
-/* Home / Lobby */
-.welcome {
-  text-align: center;
-  font-size: 26px;
-  font-weight: bold;
-  color: #34495e;
-  margin: 40px 0;
-}
-
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 40px;
-}
-
-nav a {
-  font-weight: bold;
-}
-
-/* Formulários */
 form {
-  background: #fff;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-  max-width: 500px;
-  margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin: 0 auto 20px auto;
 }
 
-h1, h2 {
-  color: #2c3e50;
-  margin-bottom: 15px;
+input, select, button {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+button {
+    background: #3498db;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #2980b9;
 }
 
 ul {
-  list-style: none;
-  margin-top: 10px;
+    list-style-type: none;
+    padding-left: 0;
 }
 
-ul li {
-  background: #ecf0f1;
-  padding: 10px;
-  margin-bottom: 5px;
-  border-radius: 6px;
+.menu {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.menu a {
+    text-decoration: none;
+    font-weight: bold;
+    padding: 12px 20px;
+    border-radius: 8px;
+    background: #ecf0f1;
+    transition: 0.3s;
+    color: #2c3e50;
+}
+
+.menu a:hover {
+    background: #3498db;
+    color: white;
+}
+
+.welcome {
+    text-align: center;
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50;
+    margin: 40px 0;
+    background: #ecf0f1;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .search {
-  text-align: center;
-  margin-bottom: 30px;
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 .search input {
-  width: 300px;
+    width: 250px;
 }
 
-/* Tabelas (para futuras melhorias) */
-table {
-  width: 90%;
-  margin: 20px auto;
-  border-collapse: collapse;
+.login-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-table, th, td {
-  border: 1px solid #ccc;
-}
-
-th, td {
-  padding: 10px;
-  text-align: left;
-}
-
-th {
-  background: #2980b9;
-  color: #fff;
-}
-
-td {
-  background: #ecf0f1;
+.erro {
+    color: red;
+    text-align: center;
 }
