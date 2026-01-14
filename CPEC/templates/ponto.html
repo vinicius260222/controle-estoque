@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Registro de Ponto</h2>
+<form method="POST">
+    <select name="cpf" required>
+        <option value="">Selecione um funcionário</option>
+        {% for cpf, f in funcionarios.items() %}
+        <option value="{{ cpf }}">{{ f['nome'] }} - {{ cpf }}</option>
+        {% endfor %}
+    </select>
+    <input type="date" name="data" required>
+    <select name="status" required>
+        <option value="">Selecione o status</option>
+        <option value="Trabalhou">Trabalhou</option>
+        <option value="Vai trabalhar">Vai trabalhar</option>
+    </select>
+    <button type="submit">Registrar Ponto</button>
+</form>
+
+<h3>Pontos Registrados</h3>
+<ul>
+    {% for cpf, registros in ponto.items() %}
+    <li>
+        {{ funcionarios[cpf]['nome'] }} ({{ cpf }})
+        <ul>
+            {% for r in registros %}
+            <li>{{ r['data'] }} - {{ r['status'] }}</li>
+            {% endfor %}
+        </ul>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
