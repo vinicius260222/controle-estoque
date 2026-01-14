@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Produção - CPEC</title>
+<style>
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color:#f4f4f9; padding:20px; }
+h1 { color:#4A90E2; text-align:center; margin-bottom:20px; }
+form { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
+form input, form select { padding:10px; border-radius:8px; border:1px solid #ccc; flex:1 1 200px; }
+form button { padding:12px; background-color:#4A90E2; border:none; border-radius:8px; color:white; cursor:pointer; font-weight:bold; }
+form button:hover { background-color:#357ABD; }
+table { width:100%; border-collapse:collapse; }
+table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
+table th { background-color:#f0f0f5; }
+table tr:nth-child(even) { background-color:#f9f9f9; }
+table tr:hover { background-color:#e0f0ff; }
+.caixa { font-weight:bold; color:#50C878; margin-bottom:15px; }
+a { display:inline-block; margin-top:15px; color:#4A90E2; text-decoration:none; }
+</style>
+</head>
+<body>
+<h1>Registrar Produção</h1>
+<p class="caixa">Caixa Total: R$ {{ "%.2f"|format(caixa) }}</p>
+<form method="POST">
+<select name="nome" required>
+<option value="">Selecione o produto</option>
+{% for nome, dados in estoque.items() %}
+<option value="{{ nome }}">{{ nome }}</option>
+{% endfor %}
+</select>
+<input type="number" name="quantidade" placeholder="Quantidade" required min="1">
+<select name="tipo" required>
+<option value="entrada">Entrada</option>
+<option value="saida">Saída</option>
+</select>
+<button type="submit">Registrar</button>
+</form>
+<a href="{{ url_for('home') }}">Voltar ao Home</a>
+</body>
+</html>
