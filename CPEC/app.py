@@ -50,8 +50,8 @@ def carregar_usuarios():
 
 def carregar_nomes():
     padrao = {
-        "04932346913": "Carlos",
-        "00766969959": "Fernanda",
+        "04932346913": "Vanessa",
+        "00766969959": "Valdinei",
         "13455528902": "Vinicius"
     }
     nomes = carregar_json(ARQUIVO_NOMES, padrao)
@@ -285,3 +285,4 @@ def exportar():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
