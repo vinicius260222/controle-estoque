@@ -3,50 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Estoque</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Controle de Estoque - CPEC</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #4A90E2;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border: 1px solid white;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+        }
+
+        header a:hover {
+            background-color: white;
+            color: #4A90E2;
+        }
+
+        main {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px 30px;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+            flex: 1 1 300px;
+        }
+
+        h2 { margin-bottom: 15px; color: #4A90E2; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table th, table td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        table th {
+            background-color: #f0f0f5;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        form input, form select {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        form button {
+            padding: 12px;
+            background-color: #4A90E2;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        form button:hover {
+            background-color: #357ABD;
+        }
+
+        .caixa-total {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #50C878;
+        }
+
+        @media (max-width: 800px) {
+            main { flex-direction: column; }
+        }
+    </style>
 </head>
 <body>
-
-<div class="app">
-
     <header>
-        <h1>📦 Controle de Estoque</h1>
+        <h1>CPEC - Controle de Estoque</h1>
+        <a href="{{ url_for('logout') }}">Logout</a>
     </header>
 
-    <div class="caixa">
-        💰 Caixa: <strong>R$ {{ "%.2f"|format(caixa) }}</strong>
-    </div>
+    <main>
+        <!-- Card de Produtos -->
+        <div class="card">
+            <h2>Produtos em Estoque</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Produto</th>
+                        <th>Quantidade</th>
+                        <th>Preço Unitário</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for nome, dados in estoque.items() %}
+                    <tr>
+                        <td>{{ nome }}</td>
+                        <td>{{ dados.quantidade }}</td>
+                        <td>R$ {{ "%.2f"|format(dados.preco) }}</td>
+                        <td>R$ {{ "%.2f"|format(dados.quantidade * dados.preco) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-    <form method="POST">
-        <input type="text" name="nome" placeholder="Nome do produto" required>
-        <input type="number" name="quantidade" placeholder="Quantidade" required>
-        <input type="number" step="0.01" name="preco" placeholder="Preço unitário" required>
-
-        <select name="tipo">
-            <option value="entrada">Entrada</option>
-            <option value="saida">Saída</option>
-        </select>
-
-        <button type="submit">Salvar</button>
-    </form>
-
-    <h3 style="margin-top:20px;">📋 Produtos</h3>
-
-    {% for nome, dados in estoque.items() %}
-        <div class="produto">
-            <strong>{{ nome }}</strong><br>
-            Quantidade: {{ dados.quantidade }}<br>
-            Preço: R$ {{ "%.2f"|format(dados.preco) }}
+            <div class="caixa-total">Caixa Total: R$ {{ "%.2f"|format(caixa) }}</div>
         </div>
-    {% endfor %}
 
-</div>
+        <!-- Card de Entrada/Saída -->
+        <div class="card">
+            <h2>Adicionar/Remover Produtos</h2>
+            <form method="POST">
+                <input type="text" name="nome" placeholder="Nome do produto" required>
+                <input type="number" name="quantidade" placeholder="Quantidade" required min="1">
+                <input type="number" step="0.01" name="preco" placeholder="Preço unitário" required min="0">
+                <select name="tipo" required>
+                    <option value="entrada">Entrada</option>
+                    <option value="saida">Saída</option>
+                </select>
+                <button type="submit">Registrar</button>
+            </form>
 
+            <a href="{{ url_for('exportar') }}" style="margin-top:15px; display:inline-block; text-decoration:none; color:#4A90E2;">Exportar Estoque para Excel</a>
+        </div>
+    </main>
 </body>
 </html>
-<a href="/exportar">
-    <button style="margin-top:10px; background:#2e7d32;">
-        📊 Exportar Excel
-    </button>
-</a>
