@@ -16,7 +16,11 @@ ARQUIVO_CAIXA = "caixa.json"
 def carregar_json(arquivo, padrao):
     if os.path.exists(arquivo):
         with open(arquivo, "r", encoding="utf-8") as f:
-            return json.load(f)
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                print(f"Erro ao ler {arquivo}, retornando valor padrão")
+                return padrao
     return padrao
 
 
@@ -31,16 +35,34 @@ def salvar_json(arquivo, dados):
 def login():
     erro = None
 
-    if request.method == "POST":
-        usuarios = carregar_json(ARQUIVO_USUARIOS, {})
-        usuario = request.form.get("usuario")
-        senha = request.form.get("senha")
+    # Garante que sempre existe pelo menos um usuário
+    usuarios = carregar_json(ARQUIVO_USUARIOS, {})
+    if not usuarios:
+        usuarios = {"admin": "123456"}
+        salvar_json(ARQUIVO_USUARIOS, usuarios)
+        print("Arquivo usuarios.json vazio. Usuário padrão criado: admin / 123456")
 
-        if usuario in usuarios and usuarios[usuario] == senha:
-            session["usuario"] = usuario
-            return redirect(url_for("produtos"))
+    if request.method == "POST":
+        usuario = request.form.get("usuario", "").strip()
+        senha = request.form.get("senha", "").strip()
+
+        # DEBUG: imprime informações de login
+        print("Login tentado")
+        print("Usuario digitado:", repr(usuario))
+        print("Senha digitada:", repr(senha))
+        print("Usuarios cadastrados:", usuarios)
+
+        if usuario in usuarios:
+            if usuarios[usuario] == senha:
+                session["usuario"] = usuario
+                print("Login bem-sucedido para:", usuario)
+                return redirect(url_for("produtos"))
+            else:
+                erro = "Senha incorreta"
+                print("Falha no login: senha incorreta")
         else:
-            erro = "Usuário ou senha inválidos"
+            erro = "Usuário não encontrado"
+            print("Falha no login: usuário não encontrado")
 
     return render_template("login.html", erro=erro)
 
@@ -60,10 +82,10 @@ def produtos():
     caixa = carregar_json(ARQUIVO_CAIXA, {"saldo": 0})
 
     if request.method == "POST":
-        nome = request.form.get("nome")
+        nome = request.form.get("nome", "").strip()
         quantidade = int(request.form.get("quantidade", 0))
         preco = float(request.form.get("preco", 0))
-        tipo = request.form.get("tipo")
+        tipo = request.form.get("tipo", "")
 
         if nome not in estoque:
             estoque[nome] = {"quantidade": 0, "preco": preco}
@@ -121,6 +143,3 @@ def exportar():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-
-
