@@ -1,48 +1,54 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cadastro - CPEC</title>
-<style>
-body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color:#f4f4f9; padding:20px; }
-h1 { color:#4A90E2; text-align:center; margin-bottom:20px; }
-form { display:flex; flex-wrap:wrap; gap:12px; margin-bottom:20px; }
-form input { padding:10px; border-radius:8px; border:1px solid #ccc; flex:1 1 200px; }
-form button { padding:12px; background-color:#4A90E2; border:none; border-radius:8px; color:white; cursor:pointer; font-weight:bold; }
-form button:hover { background-color:#357ABD; }
-table { width:100%; border-collapse:collapse; }
-table th, table td { border:1px solid #ccc; padding:10px; text-align:center; }
-table th { background-color:#f0f0f5; }
-table tr:nth-child(even) { background-color:#f9f9f9; }
-table tr:hover { background-color:#e0f0ff; }
-a { display:inline-block; margin-top:15px; color:#4A90E2; text-decoration:none; }
-</style>
+    <meta charset="UTF-8">
+    <title>Cadastro de Produtos - Controle CPEC</title>
+    <style>
+        body { font-family: Arial; background-color: #f4f6f8; padding: 20px; }
+        h1 { text-align: center; color: #2c3e50; }
+        .usuario { text-align: center; margin-bottom: 20px; color: #34495e; }
+        form { display: flex; flex-direction: column; max-width: 400px; margin: 0 auto; gap: 10px; }
+        input { padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px; border: none; border-radius: 5px; background-color: #3498db; color: white; cursor: pointer; transition: 0.3s; }
+        button:hover { background-color: #2980b9; }
+        table { margin: 30px auto; border-collapse: collapse; width: 90%; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+        th { background-color: #3498db; color: white; }
+        .voltar { margin-top: 20px; background-color: #e67e22; }
+        .voltar:hover { background-color: #d35400; }
+    </style>
 </head>
 <body>
-<h1>Cadastro de Produtos</h1>
-<form method="POST">
-<input type="text" name="nome" placeholder="Nome do produto" required>
-<input type="number" step="0.01" name="preco" placeholder="Preço unitário" required>
-<input type="text" name="categoria" placeholder="Categoria">
-<input type="text" name="fornecedor" placeholder="Fornecedor">
-<button type="submit">Cadastrar Produto</button>
-</form>
-<table>
-<thead>
-<tr><th>Produto</th><th>Preço</th><th>Categoria</th><th>Fornecedor</th></tr>
-</thead>
-<tbody>
-{% for nome, dados in estoque.items() %}
-<tr>
-<td>{{ nome }}</td>
-<td>R$ {{ "%.2f"|format(dados.preco) }}</td>
-<td>{{ dados.categoria }}</td>
-<td>{{ dados.fornecedor }}</td>
-</tr>
-{% endfor %}
-</tbody>
-</table>
-<a href="{{ url_for('home') }}">Voltar ao Home</a>
+    <h1>Cadastro de Produtos</h1>
+    <div class="usuario">Usuário logado: {{ usuario }}</div>
+
+    <form method="POST">
+        <input type="text" name="nome" placeholder="Nome do produto" required>
+        <input type="number" step="0.01" name="preco" placeholder="Preço unitário" required>
+        <input type="text" name="categoria" placeholder="Categoria">
+        <input type="text" name="fornecedor" placeholder="Fornecedor">
+        <button type="submit">Cadastrar / Atualizar Produto</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>Produto</th>
+            <th>Preço</th>
+            <th>Categoria</th>
+            <th>Fornecedor</th>
+            <th>Quantidade</th>
+        </tr>
+        {% for nome, dados in estoque.items() %}
+        <tr>
+            <td>{{ nome }}</td>
+            <td>{{ dados.preco }}</td>
+            <td>{{ dados.categoria }}</td>
+            <td>{{ dados.fornecedor }}</td>
+            <td>{{ dados.quantidade }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <button class="voltar" onclick="window.location.href='{{ url_for('home') }}'">Voltar</button>
 </body>
 </html>
