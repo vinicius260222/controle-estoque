@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Caixa - CPEC</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f5f5f5; margin:0; padding:0; }
+header { background:#007bff; color:#fff; padding:20px; text-align:center; position:relative; }
+header h1 { margin:0; font-size:28px; }
+a.home { position:absolute; top:20px; left:20px; text-decoration:none; background:#6c757d; color:#fff; padding:10px 15px; border-radius:5px; font-weight:bold; }
+a.home:hover { background:#5a6268; }
+.container { padding:40px 20px; display:flex; flex-direction:column; align-items:center; gap:40px; }
+.form-cadastro { background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); width:300px; text-align:center; }
+.form-cadastro input, .form-cadastro select, .form-cadastro button { width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc; }
+.form-cadastro button { background:#28a745; color:#fff; border:none; cursor:pointer; }
+.form-cadastro button:hover { background:#218838; }
+.erro { color:red; margin-bottom:10px; }
+.saldo { background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); width:300px; text-align:center; font-size:24px; }
+footer { text-align:center; padding:15px; color:#555; }
+</style>
+</head>
+<body>
+<header>
+<h1>Caixa</h1>
+<a href="{{ url_for('home') }}" class="home">← Home</a>
+</header>
+<div class="container">
+<div class="form-cadastro">
+<h2>Registrar Movimento</h2>
+{% if erro %}<div class="erro">{{ erro }}</div>{% endif %}
+<form method="POST">
+<select name="tipo" required>
+<option value="">Tipo</option>
+<option value="entrada">Entrada</option>
+<option value="saida">Saída</option>
+</select>
+<input type="number" name="valor" placeholder="Valor" step="0.01" min="0" required>
+<button type="submit">Registrar</button>
+</form>
+</div>
+<div class="saldo">
+Saldo Atual: R$ {{ caixa.saldo }}
+</div>
+</div>
+<footer>Ferreira Pré-Moldados © 2026</footer>
+</body>
+</html>
