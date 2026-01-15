@@ -106,14 +106,25 @@ def funcionarios():
     funcionarios = carregar_json(FUNCIONARIOS_FILE)
     erro = None
 
+    editar_cpf = request.args.get("editar")
+    funcionario_editar = None
+
+    if editar_cpf and editar_cpf in funcionarios:
+        funcionario_editar = {
+            "cpf": editar_cpf,
+            "nome": funcionarios[editar_cpf]["nome"],
+            "cargo": funcionarios[editar_cpf]["cargo"],
+            "dias_trabalhados": funcionarios[editar_cpf].get("dias_trabalhados", 0)
+        }
+
     if request.method == "POST":
         cpf = request.form.get("cpf")
         nome = request.form.get("nome")
         cargo = request.form.get("cargo")
-        dias_trabalhados = request.form.get("dias_trabalhados", "0")
+        dias_trabalhados = request.form.get("dias_trabalhados", 0)
 
         if not cpf or not nome or not cargo:
-            erro = "Todos os campos obrigatórios!"
+            erro = "Preencha todos os campos obrigatórios."
         else:
             try:
                 dias_trabalhados = int(dias_trabalhados)
@@ -125,9 +136,16 @@ def funcionarios():
                 "cargo": cargo,
                 "dias_trabalhados": dias_trabalhados
             }
-            salvar_json(FUNCIONARIOS_FILE, funcionarios)
 
-    return render_template("funcionarios.html", funcionarios=funcionarios, erro=erro)
+            salvar_json(FUNCIONARIOS_FILE, funcionarios)
+            return redirect(url_for("funcionarios"))
+
+    return render_template(
+        "funcionarios.html",
+        funcionarios=funcionarios,
+        erro=erro,
+        funcionario_editar=funcionario_editar
+    )
 
 # ---------------- RELATÓRIOS ----------------
 @app.route("/relatorios/estoque")
