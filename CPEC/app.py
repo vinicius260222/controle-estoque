@@ -22,8 +22,9 @@ def login():
     erro = None
 
     if request.method == "POST":
-        cpf = request.form.get("usuario")
-        senha = request.form.get("senha")
+        # Remove espaços extras do CPF e senha
+        cpf = request.form.get("usuario", "").strip()
+        senha = request.form.get("senha", "").strip()
 
         if not cpf or not senha:
             erro = "Preencha todos os campos"
@@ -56,4 +57,4 @@ def logout():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=port, debug=True)
