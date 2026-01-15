@@ -1,34 +1,92 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard - CPEC</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #f5f5f5; margin:0; padding:0; }
-        header { background: #007bff; color: #fff; padding: 20px; text-align: center; position: relative; }
-        header h1 { margin:0; font-size:28px; }
-        a.logout { position:absolute; top:20px; right:20px; text-decoration:none; background:#ff4d4d; color:#fff; padding:10px 15px; border-radius:5px; font-weight:bold; }
-        a.logout:hover { background:#e60000; }
-        .dashboard { display:flex; flex-wrap:wrap; justify-content:center; padding:40px 20px; gap:30px; }
-        .card { background:#fff; width:200px; height:200px; border-radius:15px; box-shadow:0 5px 15px rgba(0,0,0,0.1);
-                display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:60px;
-                cursor:pointer; transition: transform 0.2s, box-shadow 0.2s; text-align:center; padding:15px; }
-        .card:hover { transform:translateY(-10px); box-shadow:0 10px 25px rgba(0,0,0,0.2); }
-        .card span { display:block; margin-top:15px; font-size:18px; font-weight:bold; color:#333; }
-        footer { text-align:center; padding:15px; color:#555; }
-    </style>
+<meta charset="UTF-8">
+<title>Dashboard - CPEC</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    margin: 0;
+}
+
+header {
+    background: #007bff;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header img {
+    max-height: 50px;
+}
+
+.container {
+    padding: 40px 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: center;
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.card span {
+    display: block;
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+footer {
+    text-align: center;
+    padding: 15px;
+    color: #555;
+}
+</style>
 </head>
 <body>
-    <header>
-        <h1>Bem-vindo, {{ nome }}!</h1>
-        <a href="{{ url_for('logout') }}" class="logout">Sair</a>
-    </header>
-    <div class="dashboard">
-        <div class="card" onclick="window.location.href='{{ url_for('estoque') }}'">📦<span>Estoque</span></div>
-        <div class="card" onclick="window.location.href='{{ url_for('caixa') }}'">💰<span>Caixa</span></div>
-        <div class="card" onclick="window.location.href='{{ url_for('funcionarios') }}'">👤<span>Funcionários</span></div>
-        <div class="card" onclick="window.location.href='{{ url_for('relatorios') }}'">📊<span>Relatórios</span></div>
+<header>
+    <h1>Dashboard</h1>
+    <img src="{{ url_for('static', filename='logo-cpec.png') }}" alt="CPEC Logo">
+</header>
+<div class="container">
+    <div class="card" onclick="location.href='{{ url_for('estoque') }}'">
+        <span>📦</span>
+        Estoque
     </div>
-    <footer>Ferreira Pré-Moldados © 2026</footer>
+    <div class="card" onclick="location.href='{{ url_for('caixa') }}'">
+        <span>💰</span>
+        Caixa
+    </div>
+    <div class="card" onclick="location.href='{{ url_for('funcionarios') }}'">
+        <span>👥</span>
+        Funcionários
+    </div>
+    <div class="card" onclick="location.href='{{ url_for('relatorios') }}'">
+        <span>📊</span>
+        Relatórios
+    </div>
+</div>
+<footer>Ferreira Pré-Moldados © 2026</footer>
 </body>
 </html>
