@@ -2,109 +2,71 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login CPEC</title>
+    <title>Login | Sistema</title>
     <style>
-        /* Reset básico */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
         body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(135deg, #4A90E2, #50E3C2);
         }
 
-        .login-container {
-            background-color: #fff;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        .login-box {
+            background: white;
+            padding: 30px;
             width: 320px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
             text-align: center;
         }
 
-        h1 {
-            margin-bottom: 30px;
-            color: #333;
-            font-size: 28px;
-        }
-
-        label {
-            display: block;
-            text-align: left;
-            margin-bottom: 5px;
-            color: #555;
-            font-weight: 500;
-        }
-
-        input[type="text"], input[type="password"] {
-            width: 100%;
-            padding: 10px 12px;
+        h2 {
             margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
         }
 
         button {
             width: 100%;
-            padding: 12px;
-            background-color: #4A90E2;
-            border: none;
-            border-radius: 8px;
+            padding: 10px;
+            background: #2c7be5;
             color: white;
-            font-size: 16px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #357ABD;
+            background: #1a5fd0;
         }
 
         .erro {
-            color: #D8000C;
-            background-color: #FFD2D2;
-            padding: 10px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
-        }
-
-        @media (max-width: 400px) {
-            .login-container {
-                width: 90%;
-                padding: 30px 20px;
-            }
+            color: red;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <h1>LOGIN CPEC</h1>
 
-        {% if erro %}
-            <div class="erro">{{ erro }}</div>
-        {% endif %}
+<div class="login-box">
+    <h2>🔐 Login</h2>
 
-        <form method="POST" action="{{ url_for('login') }}">
-            <label for="usuario">Usuário:</label>
-            <input type="text" id="usuario" name="usuario" required>
+    <form method="POST" action="{{ url_for('login') }}">
+        <input type="text" name="cpf" placeholder="CPF" required>
+        <input type="password" name="senha" placeholder="Senha" required>
+        <button type="submit">Entrar</button>
+    </form>
 
-            <label for="senha">Senha:</label>
-            <input type="password" id="senha" name="senha" required>
+    {% if erro %}
+        <div class="erro">{{ erro }}</div>
+    {% endif %}
+</div>
 
-            <button type="submit">Entrar</button>
-        </form>
-    </div>
 </body>
 </html>
-
-
