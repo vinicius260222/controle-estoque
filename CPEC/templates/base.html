@@ -2,23 +2,102 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>CPEC - Controle</title>
+    <title>CPEC - Sistema Interno</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f9;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* MENU LATERAL */
+        .sidebar {
+            width: 240px;
+            background: linear-gradient(180deg, #0d6efd, #084298);
+            color: white;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 22px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            transition: background 0.2s;
+            font-weight: 500;
+        }
+
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* CONTEÚDO */
+        .content {
+            flex: 1;
+            padding: 30px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #777;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<header style="padding: 20px; background:#0d6efd; color:white;">
-    <h1 style="margin:0;">CPEC</h1>
-</header>
+<div class="layout">
 
-<main style="padding: 20px;">
-    {% block content %}{% endblock %}
-</main>
+    <!-- MENU -->
+    <nav class="sidebar">
+        <h2>CPEC</h2>
 
-<footer style="text-align:center; padding:10px; font-size:12px; color:#666;">
-    © CPEC - Sistema Interno
-</footer>
+        <a href="{{ url_for('home') }}">🏠 Home</a>
+        <a href="{{ url_for('cadastro') }}">📦 Cadastro</a>
+        <a href="{{ url_for('producao') }}">🏭 Produção</a>
+        <a href="{{ url_for('movimentacoes') }}">🔄 Movimentações</a>
+        <a href="{{ url_for('despesas') }}">💰 Despesas</a>
+        <a href="{{ url_for('funcionarios') }}">👷 Funcionários</a>
+        <a href="{{ url_for('ponto') }}">📅 Ponto</a>
+        <a href="{{ url_for('exportar') }}">📊 Exportar</a>
+        <a href="{{ url_for('logout') }}">🚪 Sair</a>
+    </nav>
+
+    <!-- CONTEÚDO -->
+    <main class="content">
+        {% block content %}{% endblock %}
+        <footer>
+            © CPEC – Sistema Interno
+        </footer>
+    </main>
+
+</div>
 
 </body>
 </html>
