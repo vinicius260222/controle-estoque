@@ -1,39 +1,81 @@
-app.route("/", methods=["GET", "POST"])
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    erro = None
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>CPEC - Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+        }
+        header {
+            background: #0d6efd;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .container {
+            padding: 40px;
+            text-align: center;
+        }
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            font-size: 18px;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .dashboard-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 26px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
 
-    if request.method == "POST":
-        cpf = request.form.get("usuario")
-        senha = request.form.get("senha")
+<header>
+    <strong>CPEC • Sistema</strong>
+    <a href="{{ url_for('logout') }}" style="color:white;text-decoration:none;">Sair</a>
+</header>
 
-        usuarios = carregar_json(USUARIOS_FILE)
-        nomes = carregar_json(NOMES_FILE)
+<div class="container">
+    <h1>Bem-vindo, {{ nome }} 👋</h1>
+    <p>Escolha uma opção abaixo</p>
 
-        if cpf in usuarios and usuarios[cpf]["senha"] == senha:
-            session["usuario"] = cpf
-            session["nome"] = nomes.get(cpf, "Usuário")
-            return redirect(url_for("home"))
-        else:
-            erro = "Usuário ou senha inválidos"
+    <div class="cards">
+        <div class="card">📦 Estoque</div>
+        <div class="card">🧾 Cadastrar Produto</div>
+        <div class="card">💰 Caixa</div>
+        <div class="card">👥 Funcionários</div>
+        <div class="card">📊 Relatórios</div>
+    </div>
+</div>
 
-    return render_template("login.html", erro=erro)
+<button class="dashboard-btn">📊</button>
 
-
-@app.route("/home")
-def home():
-    if "usuario" not in session:
-        return redirect(url_for("login"))
-
-    return render_template("home.html", nome=session.get("nome"))
-
-
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("login"))
-
-
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+</body>
+</html>
