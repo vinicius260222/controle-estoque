@@ -15,10 +15,9 @@ body {
 header {
     background: #007bff;
     color: #fff;
-    padding: 25px 50px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    padding: 20px 50px;
+    text-align: center;
+    position: relative;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
@@ -27,32 +26,47 @@ header h1 {
     font-size: 28px;
 }
 
-header img {
-    max-height: 70px;
-    border-radius: 8px;
+.saudacao {
+    margin-top: 10px;
+    font-size: 22px;
+    color: #fff;
 }
 
 .container {
-    padding: 40px 50px;
+    position: relative;
+    padding: 60px 50px;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 35px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 35px;
+}
+
+.fundo-logo {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0.05;
+    max-width: 600px;
+    z-index: 0;
 }
 
 .card {
-    background: #fff;
+    position: relative;
+    z-index: 1;
     border-radius: 15px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    padding: 35px;
+    padding: 50px 20px;
     text-align: center;
     font-size: 22px;
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.4s, box-shadow 0.4s;
+    color: #fff;
+    font-weight: 500;
 }
 
 .card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    transform: scale(1.15);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
 
 .card span {
@@ -60,6 +74,12 @@ header img {
     font-size: 50px;
     margin-bottom: 15px;
 }
+
+/* Cores diferentes para cada card */
+.card.estoque { background: #FFC107; }
+.card.caixa { background: #FF5722; }
+.card.funcionarios { background: #28A745; }
+.card.relatorios { background: #007BFF; }
 
 footer {
     text-align: center;
@@ -75,26 +95,30 @@ footer {
 <body>
 <header>
     <h1>Dashboard</h1>
-    <img src="{{ url_for('static', filename='logo-cpec.png') }}" alt="CPEC Logo">
+    <div class="saudacao">Seja bem-vindo, {{ session['nome'] }}! 😎</div>
 </header>
+
+<img src="{{ url_for('static', filename='logo-cpec.png') }}" class="fundo-logo" alt="CPEC Logo">
+
 <div class="container">
-    <div class="card" onclick="location.href='{{ url_for('estoque') }}'">
+    <div class="card estoque" onclick="location.href='{{ url_for('estoque') }}'">
         <span>📦</span>
         Estoque
     </div>
-    <div class="card" onclick="location.href='{{ url_for('caixa') }}'">
+    <div class="card caixa" onclick="location.href='{{ url_for('caixa') }}'">
         <span>💰</span>
         Caixa
     </div>
-    <div class="card" onclick="location.href='{{ url_for('funcionarios') }}'">
+    <div class="card funcionarios" onclick="location.href='{{ url_for('funcionarios') }}'">
         <span>👥</span>
         Funcionários
     </div>
-    <div class="card" onclick="location.href='{{ url_for('relatorios') }}'">
+    <div class="card relatorios" onclick="location.href='{{ url_for('relatorios') }}'">
         <span>📊</span>
         Relatórios
     </div>
 </div>
+
 <footer>Ferreira Pré-Moldados © 2026</footer>
 </body>
 </html>
