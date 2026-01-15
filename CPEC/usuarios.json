@@ -1,11 +1,14 @@
 {
-  "04932346913": {
-    "senha": "02111982"
+  "13455528902": {
+    "nome": "Vinicius Gabriel",
+    "senha": "pbkdf2:sha256:600000$w8Df7kYQ$4b09c2d20c82847f0c2f93fa580beab69ff6e6d152dbde48290d0a3c5b1a18a6"
   },
   "00766969959": {
-    "senha": "01061981"
+    "nome": "Valdinei Ferreira",
+    "senha": "pbkdf2:sha256:600000$F1sXlm0e$0a92f1b56f64e36ff8c8b01fa2b2d676ff8024168475e34a0a3a51f7e9c0d6ae"
   },
-  "13455528902": {
-    "senha": "06102006"
+  "04932346913": {
+    "nome": "Vanessa Meire",
+    "senha": "pbkdf2:sha256:600000$Q8hV7bKx$1d12f4764bde4f37f4322a34a5f0f34a09e5f573d4b3b9d0d7b7f8c7e2a5f8c1"
   }
 }
