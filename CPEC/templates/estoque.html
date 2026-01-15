@@ -56,10 +56,10 @@ footer { text-align:center; padding:15px; color:#555; }
 {% for item, dados in estoque.items() %}
 <tr>
 <td>{{ item }}</td>
-<td>{{ dados.descricao }}</td>
-<td>{{ dados.quantidade }}</td>
-<td>{{ "%.2f"|format(dados.valor_unitario) }}</td>
-<td>{{ "%.2f"|format(dados.quantidade * dados.valor_unitario) }}</td>
+<td>{{ dados["descricao"] }}</td>
+<td>{{ dados["quantidade"] }}</td>
+<td>{{ "%.2f"|format(dados["valor_unitario"]) }}</td>
+<td>{{ "%.2f"|format(dados["quantidade"] * dados["valor_unitario"]) }}</td>
 </tr>
 {% else %}
 <tr><td colspan="5">Nenhum item cadastrado.</td></tr>
