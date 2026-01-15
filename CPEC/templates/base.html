@@ -3,134 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <title>CPEC - Sistema Interno</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <style>
         body {
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
-            background-color: #f4f6f9;
+            background: #f1f3f6;
         }
 
-        .layout {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* MENU LATERAL */
-        .sidebar {
-            width: 240px;
-            background: linear-gradient(180deg, #0d6efd, #084298);
+        header {
+            background: #0d6efd;
             color: white;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 18px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .sidebar h2 {
-            text-align: center;
-            margin-bottom: 30px;
+        header h2 {
+            margin: 0;
             font-size: 22px;
         }
 
-        .sidebar a {
-            display: block;
+        header a {
             color: white;
             text-decoration: none;
-            padding: 12px 15px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            transition: background 0.2s;
-            font-weight: 500;
+            font-weight: bold;
         }
 
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* CONTEÚDO */
-        .content {
-            flex: 1;
+        main {
             padding: 30px;
         }
 
-        footer {
-            text-align: center;
-            font-size: 12px;
-            color: #777;
-            margin-top: 40px;
+        /* BOTÃO DASHBOARD */
+        #btnDashboard {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #0d6efd;
+            color: white;
+            border: none;
+            padding: 14px 18px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10001;
+            box-shadow: 0 10px 25px rgba(0,0,0,.3);
         }
 
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 200px;
-            }
+        /* DASHBOARD OCULTO */
+        #dashboardAtalho {
+            position: fixed;
+            top: 90px;
+            right: 30px;
+            width: 90%;
+            max-width: 900px;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 30px 60px rgba(0,0,0,.3);
+            display: none;
+            z-index: 10000;
+        }
+
+        #dashboardAtalho.mostrar {
+            display: block;
+        }
+
+        #dashboardAtalho h3 {
+            margin-top: 0;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .card {
+            background: #f8f9fa;
+            padding: 18px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 6px 18px rgba(0,0,0,.1);
+        }
+
+        .card span {
+            font-size: 26px;
+            font-weight: bold;
+            color: #0d6efd;
+        }
+
+        .card small {
+            display: block;
+            color: #555;
+            margin-top: 5px;
         }
     </style>
 </head>
 
 <body>
 
-<div class="layout">
+<header>
+    <h2>CPEC • Sistema</h2>
+    <a href="{{ url_for('logout') }}">Sair</a>
+</header>
 
-    <!-- MENU -->
-    <nav class="sidebar">
-        <h2>CPEC</h2>
+<main>
+    {% block content %}{% endblock %}
+</main>
 
-        <a href="{{ url_for('home') }}">🏠 Home</a>
-        <a href="{{ url_for('cadastro') }}">📦 Cadastro</a>
-        <a href="{{ url_for('producao') }}">🏭 Produção</a>
-        <a href="{{ url_for('movimentacoes') }}">🔄 Movimentações</a>
-        <a href="{{ url_for('despesas') }}">💰 Despesas</a>
-        <a href="{{ url_for('funcionarios') }}">👷 Funcionários</a>
-        <a href="{{ url_for('ponto') }}">📅 Ponto</a>
-        <a href="{{ url_for('exportar') }}">📊 Exportar</a>
-        <a href="{{ url_for('logout') }}">🚪 Sair</a>
-    </nav>
+<!-- BOTÃO FIXO -->
+<button id="btnDashboard">📊</button>
 
-    <!-- CONTEÚDO -->
-    <main class="content">
-        {% block content %}{% endblock %}
-        <footer>
-            © CPEC – Sistema Interno
-        </footer>
-    </main>
+<!-- DASHBOARD GLOBAL -->
+<div id="dashboardAtalho">
+    <h3>📊 Painel Rápido</h3>
 
+    <div class="dashboard">
+        <div class="card">
+            <span>{{ total_produtos or 0 }}</span>
+            <small>Produtos</small>
+        </div>
+
+        <div class="card">
+            <span>{{ total_itens or 0 }}</span>
+            <small>Itens em Estoque</small>
+        </div>
+
+        <div class="card">
+            <span>R$ {{ "%.2f"|format(saldo_caixa or 0) }}</span>
+            <small>Caixa</small>
+        </div>
+
+        <div class="card">
+            <span>{{ total_funcionarios or 0 }}</span>
+            <small>Funcionários</small>
+        </div>
+    </div>
 </div>
-<!-- Botão flutuante do Dashboard -->
-<button id="btnDashboard">📊 Dashboard</button>
 
 <script>
-    const btn = document.getElementById("btnDashboard");
-    btn.addEventListener("click", () => {
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("btnDashboard");
         const dash = document.getElementById("dashboardAtalho");
-        if (dash) {
+
+        btn.addEventListener("click", function () {
             dash.classList.toggle("mostrar");
-        }
+        });
     });
 </script>
-
-<style>
-    #btnDashboard {
-        position: fixed;
-        bottom: 25px;
-        right: 25px;
-        background: #0d6efd;
-        color: white;
-        border: none;
-        padding: 14px 22px;
-        border-radius: 50px;
-        font-size: 16px;
-        cursor: pointer;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-        z-index: 9999;
-    }
-
-    #btnDashboard:hover {
-        background: #084298;
-    }
-</style>
 
 </body>
 </html>
