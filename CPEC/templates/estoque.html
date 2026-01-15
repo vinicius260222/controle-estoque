@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Estoque - CPEC</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: #007bff;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .container {
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .form-cadastro {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        .form-cadastro input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .form-cadastro button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .form-cadastro button:hover {
+            background: #218838;
+        }
+
+        .erro {
+            color: red;
+            margin-bottom: 10px;
+        }
+
+        .tabela-estoque {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            width: 80%;
+            overflow-x: auto;
+        }
+
+        .tabela-estoque table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabela-estoque th, .tabela-estoque td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .tabela-estoque th {
+            background: #f8f9fa;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Estoque - CPEC</h1>
+    </header>
+
+    <div class="container">
+        <div class="form-cadastro">
+            <h2>Cadastrar Itens Produzidos</h2>
+            {% if erro %}
+                <div class="erro">{{ erro }}</div>
+            {% endif %}
+            <form method="POST">
+                <input type="text" name="nome_item" placeholder="Nome do item" required>
+                <input type="number" name="quantidade" placeholder="Quantidade" min="1" required>
+                <button type="submit">Adicionar</button>
+            </form>
+        </div>
+
+        <div class="tabela-estoque">
+            <h2>Itens em Estoque</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Item</th>
+                        <th>Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item, dados in estoque.items() %}
+                        <tr>
+                            <td>{{ item }}</td>
+                            <td>{{ dados.quantidade }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="2">Nenhum item cadastrado.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        Ferreira Pré-Moldados © 2026
+    </footer>
+</body>
+</html>
