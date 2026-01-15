@@ -1,21 +1,184 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard</title>
+    <title>Home</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #333;
+        }
+
+        header {
+            background: #ffffff;
+            padding: 15px 25px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 20px;
+            margin: 0;
+        }
+
+        header span {
+            font-weight: normal;
+            color: #666;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        }
+
+        .card .emoji {
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        .card h2 {
+            font-size: 18px;
+            margin: 0;
+        }
+
+        /* DASHBOARD FLUTUANTE */
+        .dashboard-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+        }
+
+        .dashboard {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 260px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            padding: 15px;
+            display: none;
+        }
+
+        .dashboard h3 {
+            margin-top: 0;
+            font-size: 16px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+        }
+
+        .dashboard a {
+            display: block;
+            padding: 10px;
+            margin-top: 8px;
+            background: #f1f3f5;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .dashboard a:hover {
+            background: #e0e0e0;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 16px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<h1>Bem-vindo, {{ nome }} 👋</h1>
+<header>
+    <h1>🏢 Sistema de Gestão</h1>
+    <span>Bem-vindo, {{ nome }}</span>
+</header>
 
-<div style="margin-top:30px;">
-    <p>📦 Estoque</p>
-    <p>💰 Caixa</p>
-    <p>📊 Relatórios</p>
+<div class="container">
+    <div class="cards">
+        <a href="#" class="card">
+            <div class="emoji">📦</div>
+            <h2>Estoque</h2>
+        </a>
+
+        <a href="#" class="card">
+            <div class="emoji">🧾</div>
+            <h2>Cadastrar Produto</h2>
+        </a>
+
+        <a href="#" class="card">
+            <div class="emoji">💰</div>
+            <h2>Caixa</h2>
+        </a>
+
+        <a href="#" class="card">
+            <div class="emoji">📊</div>
+            <h2>Relatórios</h2>
+        </a>
+
+        <a href="#" class="card">
+            <div class="emoji">👤</div>
+            <h2>Usuários</h2>
+        </a>
+    </div>
 </div>
 
-<br>
-<a href="{{ url_for('logout') }}">🚪 Sair</a>
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+    <h3>⚙️ Atalhos</h3>
+    <a href="#">📦 Ver Estoque</a>
+    <a href="#">➕ Novo Produto</a>
+    <a href="#">💰 Caixa Diário</a>
+    <a href="{{ url_for('logout') }}">🚪 Sair</a>
+</div>
+
+<button class="dashboard-btn" onclick="toggleDashboard()">☰</button>
+
+<script>
+    function toggleDashboard() {
+        const dash = document.getElementById("dashboard");
+        dash.style.display = dash.style.display === "block" ? "none" : "block";
+    }
+</script>
 
 </body>
 </html>
