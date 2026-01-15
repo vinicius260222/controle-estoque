@@ -22,7 +22,7 @@ def login():
     erro = None
 
     if request.method == "POST":
-        # Remove espaços extras do CPF e senha
+        # Remove espaços extras
         cpf = request.form.get("usuario", "").strip()
         senha = request.form.get("senha", "").strip()
 
