@@ -1,36 +1,189 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Home - CPEC</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-{% block content %}
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+        }
 
-<div style="max-width:900px; margin:auto; text-align:center;">
+        header {
+            background-color: #0d6efd;
+            color: white;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    <h1 style="font-size:42px; margin-bottom:10px;">
-        Bem-vindo, {{ nome_usuario }} 👋
-    </h1>
+        header h1 {
+            font-size: 22px;
+            margin: 0;
+        }
 
-    <p style="font-size:18px; color:#555;">
-        Sistema de controle interno da CPEC
-    </p>
+        header a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-    <div style="margin:40px 0;">
-        <input 
-            type="text" 
-            placeholder="🔍 Pesquisar produto, funcionário ou registro..."
-            style="
-                width:100%;
-                max-width:500px;
-                padding:14px;
-                font-size:16px;
-                border-radius:10px;
-                border:1px solid #ccc;
-            "
-        >
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome h2 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .welcome p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.12);
+        }
+
+        .card .emoji {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        /* Dashboard flutuante */
+        .dashboard-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            border: none;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+        }
+
+        .dashboard {
+            position: fixed;
+            bottom: 100px;
+            right: 25px;
+            width: 260px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            display: none;
+            overflow: hidden;
+        }
+
+        .dashboard a {
+            display: block;
+            padding: 14px 16px;
+            text-decoration: none;
+            color: #333;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dashboard a:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>CPEC • Sistema</h1>
+    <a href="{{ url_for('logout') }}">Sair</a>
+</header>
+
+<div class="container">
+    <div class="welcome">
+        <h2>Bem-vindo, {{ nome_usuario }} 👋</h2>
+        <p>Sistema interno de controle da CPEC</p>
     </div>
 
-    <p style="color:#666;">
-        Use o botão <strong>📊</strong> no canto da tela para acessar o painel rápido a qualquer momento.
-    </p>
+    <div class="cards">
+        <a href="{{ url_for('cadastro_produtos') }}" class="card">
+            <div class="emoji">📦</div>
+            <h3>Cadastro de Produtos</h3>
+        </a>
 
+        <a href="{{ url_for('producao') }}" class="card">
+            <div class="emoji">🏭</div>
+            <h3>Produção</h3>
+        </a>
+
+        <a href="{{ url_for('movimentacoes') }}" class="card">
+            <div class="emoji">📊</div>
+            <h3>Movimentações</h3>
+        </a>
+
+        <a href="{{ url_for('funcionarios') }}" class="card">
+            <div class="emoji">👷</div>
+            <h3>Funcionários</h3>
+        </a>
+
+        <a href="{{ url_for('despesas') }}" class="card">
+            <div class="emoji">💰</div>
+            <h3>Despesas</h3>
+        </a>
+    </div>
 </div>
 
-{% endblock %}
+<button class="dashboard-btn" onclick="toggleDashboard()">📋</button>
+
+<div class="dashboard" id="dashboard">
+    <a href="{{ url_for('cadastro_produtos') }}">📦 Produtos</a>
+    <a href="{{ url_for('producao') }}">🏭 Produção</a>
+    <a href="{{ url_for('movimentacoes') }}">📊 Movimentações</a>
+    <a href="{{ url_for('funcionarios') }}">👷 Funcionários</a>
+    <a href="{{ url_for('despesas') }}">💰 Despesas</a>
+</div>
+
+<script>
+    function toggleDashboard() {
+        const dash = document.getElementById('dashboard');
+        dash.style.display = dash.style.display === 'block' ? 'none' : 'block';
+    }
+</script>
+
+</body>
+</html>
+
