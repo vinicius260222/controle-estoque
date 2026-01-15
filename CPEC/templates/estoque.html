@@ -10,15 +10,16 @@ header h1 { margin:0; font-size:28px; }
 a.home { position:absolute; top:20px; left:20px; text-decoration:none; background:#6c757d; color:#fff; padding:10px 15px; border-radius:5px; font-weight:bold; }
 a.home:hover { background:#5a6268; }
 .container { padding:40px 20px; display:flex; flex-direction:column; align-items:center; gap:40px; }
-.form-cadastro { background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); width:300px; text-align:center; }
+.form-cadastro { background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); width:350px; text-align:center; }
 .form-cadastro input, .form-cadastro button { width:100%; padding:10px; margin:10px 0; border-radius:5px; border:1px solid #ccc; }
 .form-cadastro button { background:#28a745; color:#fff; border:none; cursor:pointer; }
 .form-cadastro button:hover { background:#218838; }
 .erro { color:red; margin-bottom:10px; }
-.tabela-estoque { background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); width:80%; overflow-x:auto; }
+.tabela-estoque { background:#fff; padding:20px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); width:90%; overflow-x:auto; }
 .tabela-estoque table { width:100%; border-collapse:collapse; }
 .tabela-estoque th, .tabela-estoque td { padding:10px; border:1px solid #ddd; text-align:left; }
 .tabela-estoque th { background:#f8f9fa; }
+tfoot td { font-weight:bold; }
 footer { text-align:center; padding:15px; color:#555; }
 </style>
 </head>
@@ -33,21 +34,43 @@ footer { text-align:center; padding:15px; color:#555; }
 {% if erro %}<div class="erro">{{ erro }}</div>{% endif %}
 <form method="POST">
 <input type="text" name="nome_item" placeholder="Nome do item" required>
+<input type="text" name="descricao" placeholder="Descrição">
 <input type="number" name="quantidade" placeholder="Quantidade" min="1" required>
+<input type="number" name="valor_unitario" placeholder="Valor Unitário" step="0.01" min="0" required>
 <button type="submit">Adicionar</button>
 </form>
 </div>
 <div class="tabela-estoque">
 <h2>Itens em Estoque</h2>
 <table>
-<thead><tr><th>Nome do Item</th><th>Quantidade</th></tr></thead>
+<thead>
+<tr>
+<th>Nome do Item</th>
+<th>Descrição</th>
+<th>Quantidade</th>
+<th>Valor Unitário (R$)</th>
+<th>Valor Total (R$)</th>
+</tr>
+</thead>
 <tbody>
 {% for item, dados in estoque.items() %}
-<tr><td>{{ item }}</td><td>{{ dados.quantidade }}</td></tr>
+<tr>
+<td>{{ item }}</td>
+<td>{{ dados.descricao }}</td>
+<td>{{ dados.quantidade }}</td>
+<td>{{ "%.2f"|format(dados.valor_unitario) }}</td>
+<td>{{ "%.2f"|format(dados.quantidade * dados.valor_unitario) }}</td>
+</tr>
 {% else %}
-<tr><td colspan="2">Nenhum item cadastrado.</td></tr>
+<tr><td colspan="5">Nenhum item cadastrado.</td></tr>
 {% endfor %}
 </tbody>
+<tfoot>
+<tr>
+<td colspan="4" style="text-align:right;">Total Geral:</td>
+<td>R$ {{ "%.2f"|format(total_geral) }}</td>
+</tr>
+</tfoot>
 </table>
 </div>
 </div>
