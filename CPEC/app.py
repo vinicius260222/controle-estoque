@@ -1,20 +1,18 @@
 import os
 import json
+import pandas as pd
 from flask import Flask, render_template, request, redirect, session, url_for, send_file
-from openpyxl import Workbook
-from io import BytesIO
 
 app = Flask(__name__)
 app.secret_key = "chave-super-segura"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USUARIOS_FILE = os.path.join(BASE_DIR, "usuarios.json")
+FUNCIONARIOS_FILE = os.path.join(BASE_DIR, "funcionarios.json")
 ESTOQUE_FILE = os.path.join(BASE_DIR, "estoque.json")
 CAIXA_FILE = os.path.join(BASE_DIR, "caixa.json")
-FUNCIONARIOS_FILE = os.path.join(BASE_DIR, "funcionarios.json")
 
-# ------------------- Helpers -------------------
-
+# Funções de carregar e salvar JSON
 def carregar_json(caminho):
     if not os.path.exists(caminho):
         return {}
@@ -23,19 +21,17 @@ def carregar_json(caminho):
 
 def salvar_json(caminho, dados):
     with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(dados, f, indent=4, ensure_ascii=False)
+        json.dump(dados, f, indent=4)
 
-# ------------------- Login -------------------
-
-@app.route("/", methods=["GET", "POST"])
-@app.route("/login", methods=["GET", "POST"])
+# ---------------- LOGIN ----------------
+@app.route("/", methods=["GET","POST"])
+@app.route("/login", methods=["GET","POST"])
 def login():
     erro = None
     if request.method == "POST":
-        cpf = request.form.get("usuario", "").strip()
-        senha = request.form.get("senha", "").strip()
+        cpf = request.form.get("usuario")
+        senha = request.form.get("senha")
         usuarios = carregar_json(USUARIOS_FILE)
-
         if cpf in usuarios and usuarios[cpf]["senha"] == senha:
             session["usuario"] = cpf
             session["nome"] = usuarios[cpf]["nome"]
@@ -44,135 +40,132 @@ def login():
             erro = "Usuário ou senha inválidos"
     return render_template("login.html", erro=erro)
 
+# ---------------- LOGOUT ----------------
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# ------------------- Dashboard -------------------
-
+# ---------------- DASHBOARD ----------------
 @app.route("/home")
 def home():
     if "usuario" not in session:
         return redirect(url_for("login"))
-    return render_template("home.html", nome=session.get("nome"))
+    return render_template("home.html")
 
-# ------------------- Estoque -------------------
-
+# ---------------- ESTOQUE ----------------
 @app.route("/estoque", methods=["GET", "POST"])
 def estoque():
-    if "usuario" not in session:
-        return redirect(url_for("login"))
-
     estoque = carregar_json(ESTOQUE_FILE)
     erro = None
 
     if request.method == "POST":
-        nome_item = request.form.get("nome_item", "").strip()
-        quantidade = request.form.get("quantidade", "").strip()
-
-        if not nome_item or not quantidade.isdigit():
-            erro = "Preencha todos os campos corretamente."
+        nome = request.form.get("nome")
+        quantidade = request.form.get("quantidade")
+        if not nome or not quantidade:
+            erro = "Todos os campos obrigatórios!"
         else:
-            quantidade = int(quantidade)
-            if nome_item in estoque:
-                estoque[nome_item] += quantidade
+            try:
+                quantidade = int(quantidade)
+            except ValueError:
+                quantidade = 0
+            if nome in estoque:
+                estoque[nome]["quantidade"] += quantidade
             else:
-                estoque[nome_item] = quantidade
+                estoque[nome] = {"quantidade": quantidade}
             salvar_json(ESTOQUE_FILE, estoque)
-            return redirect(url_for("estoque"))
 
     return render_template("estoque.html", estoque=estoque, erro=erro)
 
-# ------------------- Caixa -------------------
-
+# ---------------- CAIXA ----------------
 @app.route("/caixa", methods=["GET", "POST"])
 def caixa():
-    if "usuario" not in session:
-        return redirect(url_for("login"))
-
     caixa = carregar_json(CAIXA_FILE)
-    if "saldo" not in caixa:
-        caixa["saldo"] = 0.0
+    if not caixa:
+        caixa = {"saldo": 0, "movimentos": []}
 
-    erro = None
     if request.method == "POST":
-        tipo = request.form.get("tipo")
-        valor = request.form.get("valor", "").strip()
-        if not valor or not valor.replace(".", "", 1).isdigit():
-            erro = "Digite um valor válido."
-        else:
+        tipo = request.form.get("tipo")  # entrada ou saida
+        valor = request.form.get("valor")
+        try:
             valor = float(valor)
-            if tipo == "entrada":
-                caixa["saldo"] += valor
-            elif tipo == "saida":
-                caixa["saldo"] -= valor
-            salvar_json(CAIXA_FILE, caixa)
-            return redirect(url_for("caixa"))
+        except ValueError:
+            valor = 0
+        if tipo == "entrada":
+            caixa["saldo"] += valor
+        elif tipo == "saida":
+            caixa["saldo"] -= valor
+        caixa["movimentos"].append({"tipo": tipo, "valor": valor})
+        salvar_json(CAIXA_FILE, caixa)
 
-    return render_template("caixa.html", caixa=caixa, erro=erro)
+    return render_template("caixa.html", caixa=caixa)
 
-# ------------------- Funcionários -------------------
-
+# ---------------- FUNCIONÁRIOS ----------------
 @app.route("/funcionarios", methods=["GET", "POST"])
 def funcionarios():
-    if "usuario" not in session:
-        return redirect(url_for("login"))
-
     funcionarios = carregar_json(FUNCIONARIOS_FILE)
     erro = None
 
     if request.method == "POST":
-        nome = request.form.get("nome", "").strip()
-        cargo = request.form.get("cargo", "").strip()
+        cpf = request.form.get("cpf")
+        nome = request.form.get("nome")
+        cargo = request.form.get("cargo")
+        dias_trabalhados = request.form.get("dias_trabalhados", "0")
 
-        if not nome or not cargo:
-            erro = "Preencha nome e cargo corretamente."
+        if not cpf or not nome or not cargo:
+            erro = "Todos os campos obrigatórios!"
         else:
-            id_func = str(len(funcionarios) + 1)
-            funcionarios[id_func] = {"nome": nome, "cargo": cargo}
+            try:
+                dias_trabalhados = int(dias_trabalhados)
+            except ValueError:
+                dias_trabalhados = 0
+
+            funcionarios[cpf] = {
+                "nome": nome,
+                "cargo": cargo,
+                "dias_trabalhados": dias_trabalhados
+            }
             salvar_json(FUNCIONARIOS_FILE, funcionarios)
-            return redirect(url_for("funcionarios"))
 
     return render_template("funcionarios.html", funcionarios=funcionarios, erro=erro)
 
-# ------------------- Relatórios -------------------
+# ---------------- RELATÓRIOS ----------------
+@app.route("/relatorios/estoque")
+def relatorio_estoque():
+    estoque = carregar_json(ESTOQUE_FILE)
+    df = pd.DataFrame([
+        {"Nome": nome, "Quantidade": dados["quantidade"]}
+        for nome, dados in estoque.items()
+    ])
+    caminho = "relatorio_estoque.xlsx"
+    df.to_excel(caminho, index=False)
+    return send_file(caminho, as_attachment=True)
 
-@app.route("/relatorios", methods=["GET", "POST"])
-def relatorios():
-    if "usuario" not in session:
-        return redirect(url_for("login"))
+@app.route("/relatorios/caixa")
+def relatorio_caixa():
+    caixa = carregar_json(CAIXA_FILE)
+    df = pd.DataFrame(caixa.get("movimentos", []))
+    caminho = "relatorio_caixa.xlsx"
+    df.to_excel(caminho, index=False)
+    return send_file(caminho, as_attachment=True)
 
-    if request.method == "POST":
-        tipo = request.form.get("tipo")
-        wb = Workbook()
-        ws = wb.active
-        ws.title = tipo
+@app.route("/relatorios/funcionarios")
+def relatorio_funcionarios():
+    funcionarios = carregar_json(FUNCIONARIOS_FILE)
+    df = pd.DataFrame([
+        {
+            "CPF": cpf,
+            "Nome": dados["nome"],
+            "Cargo": dados["cargo"],
+            "Dias Trabalhados": dados.get("dias_trabalhados", 0)
+        }
+        for cpf, dados in funcionarios.items()
+    ])
+    caminho = "relatorio_funcionarios.xlsx"
+    df.to_excel(caminho, index=False)
+    return send_file(caminho, as_attachment=True)
 
-        if tipo == "estoque":
-            dados = carregar_json(ESTOQUE_FILE)
-            ws.append(["Item", "Quantidade"])
-            for item, qtd in dados.items():
-                ws.append([item, qtd])
-        elif tipo == "caixa":
-            dados = carregar_json(CAIXA_FILE)
-            ws.append(["Saldo"])
-            ws.append([dados.get("saldo", 0)])
-        elif tipo == "funcionarios":
-            dados = carregar_json(FUNCIONARIOS_FILE)
-            ws.append(["ID", "Nome", "Cargo"])
-            for id_func, info in dados.items():
-                ws.append([id_func, info["nome"], info["cargo"]])
-
-        arquivo = BytesIO()
-        wb.save(arquivo)
-        arquivo.seek(0)
-        return send_file(arquivo, download_name=f"{tipo}.xlsx", as_attachment=True)
-
-    return render_template("relatorios.html")
-
-# ------------------- Run -------------------
-
+# ---------------- EXECUTAR APP ----------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port, debug=True)
+    app.run(host="0.0.0.0", port=port)
