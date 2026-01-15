@@ -39,7 +39,7 @@ footer { text-align:center; padding:15px; color:#555; }
 </form>
 </div>
 <div class="saldo">
-Saldo Atual: R$ {{ caixa.saldo }}
+Saldo Atual: R$ {{ "%.2f"|format(caixa.saldo) }}
 </div>
 </div>
 <footer>Ferreira Pré-Moldados © 2026</footer>
