@@ -1,44 +1,31 @@
-@app.route("/ping")
-def ping():
-    return "pong"
 from flask import Flask, render_template, request, redirect, session, url_for
-import json
 import os
-from uuid import uuid4
+import json
+
+# =============================
+# CONFIGURAÇÃO BÁSICA
+# =============================
 
 app = Flask(__name__)
-app.secret_key = "chave-secreta-cpec"
-
-# ===============================
-# CONFIGURAÇÃO DE PASTAS / ARQUIVOS
-# ===============================
+app.secret_key = os.environ.get("SECRET_KEY", "chave-secreta-cpec")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
+os.makedirs(DATA_DIR, exist_ok=True)
 
+USUARIOS_FILE = os.path.join(DATA_DIR, "usuarios.json")
 PRODUTOS_FILE = os.path.join(DATA_DIR, "produtos.json")
 
-# ===============================
-# GARANTIR ESTRUTURA
-# ===============================
 
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
-
-if not os.path.exists(PRODUTOS_FILE):
-    with open(PRODUTOS_FILE, "w", encoding="utf-8") as f:
-        json.dump({}, f)
-
-# ===============================
+# =============================
 # FUNÇÕES AUXILIARES
-# ===============================
+# =============================
 
 def carregar_json(caminho, padrao):
-    try:
+    if os.path.exists(caminho):
         with open(caminho, "r", encoding="utf-8") as f:
             return json.load(f)
-    except:
-        return padrao
+    return padrao
 
 
 def salvar_json(caminho, dados):
@@ -46,25 +33,22 @@ def salvar_json(caminho, dados):
         json.dump(dados, f, indent=4, ensure_ascii=False)
 
 
-# ===============================
-# LOGIN (SIMPLES POR ENQUANTO)
-# ===============================
-
-USUARIOS = {
-    "admin": "1234"
-}
+# =============================
+# ROTAS DE LOGIN
+# =============================
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/login", methods=["GET", "POST"])
 def login():
     erro = None
+    usuarios = carregar_json(USUARIOS_FILE, {})
 
     if request.method == "POST":
-        usuario = request.form.get("usuario")
-        senha = request.form.get("senha")
+        cpf = request.form.get("usuario", "").strip()
+        senha = request.form.get("senha", "").strip()
 
-        if usuario in USUARIOS and USUARIOS[usuario] == senha:
-            session["usuario"] = usuario
+        if cpf in usuarios and usuarios[cpf] == senha:
+            session["usuario"] = cpf
             return redirect(url_for("home"))
         else:
             erro = "Usuário ou senha inválidos"
@@ -77,21 +61,22 @@ def logout():
     session.clear()
     return redirect(url_for("login"))
 
-# ===============================
-# HOME
-# ===============================
+
+# =============================
+# HOME (NÃO ALTERA LAYOUT)
+# =============================
 
 @app.route("/home")
 def home():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
-    return render_template("home.html")
+    return render_template("home.html", usuario=session["usuario"])
 
 
-# ===============================
+# =============================
 # CADASTRO DE PRODUTOS
-# ===============================
+# =============================
 
 @app.route("/cadastro-produtos", methods=["GET", "POST"])
 def cadastro_produtos():
@@ -101,31 +86,39 @@ def cadastro_produtos():
     produtos = carregar_json(PRODUTOS_FILE, {})
 
     if request.method == "POST":
-        produto_id = str(uuid4())[:8]
+        codigo = request.form.get("codigo").strip()
+        nome = request.form.get("nome").strip()
+        categoria = request.form.get("categoria").strip()
+        unidade = request.form.get("unidade").strip()
+        observacoes = request.form.get("observacoes", "").strip()
 
-        produtos[produto_id] = {
-            "id": produto_id,
-            "nome": request.form.get("nome"),
-            "categoria": request.form.get("categoria"),
-            "unidade": request.form.get("unidade"),
-            "preco_custo": float(request.form.get("preco_custo") or 0),
-            "preco_venda": float(request.form.get("preco_venda") or 0),
-            "estoque_minimo": int(request.form.get("estoque_minimo") or 0),
-            "fornecedor": request.form.get("fornecedor"),
-            "observacoes": request.form.get("observacoes"),
-            "status": "ativo" if request.form.get("status") else "inativo"
-        }
+        if codigo and nome:
+            produtos[codigo] = {
+                "nome": nome,
+                "categoria": categoria,
+                "unidade": unidade,
+                "observacoes": observacoes
+            }
+            salvar_json(PRODUTOS_FILE, produtos)
 
-        salvar_json(PRODUTOS_FILE, produtos)
         return redirect(url_for("cadastro_produtos"))
 
     return render_template("cadastro_produtos.html", produtos=produtos)
 
-# ===============================
-# START
-# ===============================
+
+# =============================
+# TESTE DE VIDA (RENDER)
+# =============================
+
+@app.route("/ping")
+def ping():
+    return "pong"
+
+
+# =============================
+# START (OBRIGATÓRIO PARA RENDER)
+# =============================
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
