@@ -1,3 +1,6 @@
+@app.route("/ping")
+def ping():
+    return "pong"
 from flask import Flask, render_template, request, redirect, session, url_for
 import json
 import os
@@ -125,3 +128,4 @@ def cadastro_produtos():
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
+
