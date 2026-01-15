@@ -2,130 +2,28 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Login • CPEC</title>
-
+    <title>Login - CPEC</title>
     <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            background: linear-gradient(135deg, #0d6efd, #084298);
-            font-family: Arial, Helvetica, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .login-box {
-            background: #fff;
-            width: 380px;
-            padding: 35px;
-            border-radius: 18px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
-            text-align: center;
-            animation: fadeUp 0.6s ease;
-        }
-
-        @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .logo {
-            margin-bottom: 10px;
-        }
-
-        .logo img {
-            width: 180px;
-        }
-
-        h1 {
-            margin: 10px 0 5px;
-            color: #0d6efd;
-            font-size: 24px;
-        }
-
-        p {
-            margin-bottom: 25px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        input {
-            width: 100%;
-            padding: 13px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            font-size: 15px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #0d6efd;
-        }
-
-        button {
-            width: 100%;
-            padding: 13px;
-            background: #0d6efd;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        button:hover {
-            background: #0b5ed7;
-        }
-
-        .erro {
-            background: #fdecea;
-            color: #b02a37;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 14px;
-        }
-
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #888;
-        }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-box { background: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 300px; text-align: center; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; }
+        button { width: 100%; padding: 10px; background: #007bff; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+        .erro { color: red; margin-bottom: 10px; }
+        img { width: 120px; margin-bottom: 20px; }
     </style>
 </head>
 <body>
-
-    <form class="login-box" method="POST">
-
-        <div class="logo">
-            <img src="{{ url_for('static', filename='logo-cpec.png') }}" alt="CPEC">
-        </div>
-
-        <h1>SISTEMA CPEC</h1>
-        <p>Controle interno de estoque</p>
-
+    <div class="login-box">
+        <img src="{{ url_for('static', filename='logo-cpec.png') }}" alt="Logo CPEC">
         {% if erro %}
             <div class="erro">{{ erro }}</div>
         {% endif %}
-
-        <input type="text" name="usuario" placeholder="CPF" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-
-        <button type="submit">Entrar</button>
-
-        <div class="footer">
-            © CPEC • Sistema Interno
-        </div>
-    </form>
-
+        <form method="POST">
+            <input type="text" name="usuario" placeholder="CPF">
+            <input type="password" name="senha" placeholder="Senha">
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
 </body>
 </html>
