@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, session, url_for
-import json
 import os
+import json
+from flask import Flask, render_template, request, redirect, session, url_for
 
 app = Flask(__name__)
-app.secret_key = "chave-secreta-cpec"
+app.secret_key = "chave-super-segura"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USUARIOS_FILE = os.path.join(BASE_DIR, "usuarios.json")
