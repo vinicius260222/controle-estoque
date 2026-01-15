@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 style="font-size: 32px; margin-bottom: 5px;">📦 Cadastro de Produtos</h1>
+<p style="color: #555; margin-bottom: 25px;">
+    Gerencie o catálogo de produtos da empresa
+</p>
+
+<!-- AÇÕES -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <button onclick="document.getElementById('formProduto').style.display='block'"
+            style="padding: 10px 18px; background:#0d6efd; color:white; border:none; border-radius:8px; cursor:pointer;">
+        ➕ Novo Produto
+    </button>
+
+    <input type="text" placeholder="🔍 Buscar produto..."
+           style="padding:10px; width:250px; border-radius:8px; border:1px solid #ccc;">
+</div>
+
+<!-- FORMULÁRIO -->
+<div id="formProduto" style="display:none; background:white; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1); margin-bottom:30px;">
+
+    <h2 style="margin-top:0;">Novo Produto</h2>
+
+    <form method="POST">
+
+        <!-- IDENTIFICAÇÃO -->
+        <h4>Identificação</h4>
+        <div style="display:flex; gap:15px;">
+            <input type="text" name="nome" placeholder="Nome do produto" required style="flex:2; padding:10px;">
+            <input type="text" name="categoria" placeholder="Categoria" style="flex:1; padding:10px;">
+            <input type="text" name="unidade" placeholder="Unidade (ex: un, m²)" style="flex:1; padding:10px;">
+        </div>
+
+        <!-- VALORES -->
+        <h4 style="margin-top:20px;">Valores</h4>
+        <div style="display:flex; gap:15px;">
+            <input type="number" step="0.01" name="preco_custo" placeholder="Preço de custo" style="flex:1; padding:10px;">
+            <input type="number" step="0.01" name="preco_venda" placeholder="Preço de venda" style="flex:1; padding:10px;">
+        </div>
+
+        <!-- CONTROLE -->
+        <h4 style="margin-top:20px;">Controle</h4>
+        <div style="display:flex; gap:15px;">
+            <input type="number" name="estoque_minimo" placeholder="Estoque mínimo" style="flex:1; padding:10px;">
+            <input type="text" name="fornecedor" placeholder="Fornecedor" style="flex:1; padding:10px;">
+        </div>
+
+        <textarea name="observacoes" placeholder="Observações"
+                  style="width:100%; padding:10px; margin-top:15px;"></textarea>
+
+        <div style="margin-top:15px;">
+            <label>
+                <input type="checkbox" name="status" checked>
+                Produto ativo
+            </label>
+        </div>
+
+        <div style="margin-top:20px;">
+            <button type="submit"
+                    style="padding:10px 20px; background:#198754; color:white; border:none; border-radius:8px;">
+                💾 Salvar Produto
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- LISTA DE PRODUTOS -->
+<div style="background:white; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+
+    <h2 style="margin-top:0;">Produtos Cadastrados</h2>
+
+    <table style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr style="background:#f1f3f5;">
+                <th style="padding:10px; text-align:left;">Nome</th>
+                <th>Categoria</th>
+                <th>Unidade</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Exemplo visual -->
+            <tr>
+                <td style="padding:10px;">Placa Cementícia 0,92</td>
+                <td>Placas</td>
+                <td>un</td>
+                <td style="color:green;">Ativo</td>
+                <td>
+                    ✏️ ❌
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}
