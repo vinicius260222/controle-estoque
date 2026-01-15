@@ -15,15 +15,14 @@ body {
 header {
     background: #007bff;
     color: #fff;
-    padding: 20px 50px;
+    padding: 30px 20px;
     text-align: center;
-    position: relative;
     box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 header h1 {
     margin: 0;
-    font-size: 28px;
+    font-size: 32px;
 }
 
 .saudacao {
@@ -34,30 +33,36 @@ header h1 {
 
 .container {
     position: relative;
-    padding: 60px 50px;
+    padding: 80px 50px;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-gap: 35px;
+    grid-gap: 50px;
+    justify-items: center;
+    align-items: center;
 }
 
 .fundo-logo {
     position: absolute;
-    top: 50px;
+    top: 50%;
     left: 50%;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
     opacity: 0.05;
-    max-width: 600px;
+    max-width: 700px;
     z-index: 0;
 }
 
 .card {
     position: relative;
     z-index: 1;
-    border-radius: 15px;
+    width: 220px;
+    height: 180px;
+    border-radius: 20px;
     box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    padding: 50px 20px;
-    text-align: center;
-    font-size: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
     cursor: pointer;
     transition: transform 0.4s, box-shadow 0.4s;
     color: #fff;
@@ -65,21 +70,20 @@ header h1 {
 }
 
 .card:hover {
-    transform: scale(1.15);
+    transform: scale(1.2);
     box-shadow: 0 15px 35px rgba(0,0,0,0.3);
 }
 
 .card span {
-    display: block;
     font-size: 50px;
     margin-bottom: 15px;
 }
 
 /* Cores diferentes para cada card */
-.card.estoque { background: #FFC107; }
-.card.caixa { background: #FF5722; }
-.card.funcionarios { background: #28A745; }
-.card.relatorios { background: #007BFF; }
+.card.estoque { background: #FFC107; }       /* Amarelo */
+.card.caixa { background: #FF5722; }         /* Laranja */
+.card.funcionarios { background: #28A745; }  /* Verde */
+.card.relatorios { background: #007BFF; }    /* Azul */
 
 footer {
     text-align: center;
@@ -98,6 +102,7 @@ footer {
     <div class="saudacao">Seja bem-vindo, {{ session['nome'] }}! 😎</div>
 </header>
 
+<!-- Logo de fundo -->
 <img src="{{ url_for('static', filename='logo-cpec.png') }}" class="fundo-logo" alt="CPEC Logo">
 
 <div class="container">
