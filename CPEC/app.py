@@ -1,105 +1,65 @@
-from flask import Flask, render_template, request, redirect, url_for, session
-import os
+from flask import Flask, render_template, request, redirect, session, url_for
 import json
+import os
 
-# =============================
-# CONFIGURAÇÃO BÁSICA
-# =============================
 app = Flask(__name__)
-app.secret_key = "cpec-chave-super-segura"
+app.secret_key = os.environ.get("SECRET_KEY", "chave-secreta-super-segura")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
-os.makedirs(DATA_DIR, exist_ok=True)
 
 USUARIOS_FILE = os.path.join(DATA_DIR, "usuarios.json")
 
-# =============================
-# FUNÇÕES AUXILIARES
-# =============================
+# ---------- FUNÇÕES ----------
+
 def carregar_usuarios():
-    if not os.path.exists(USUARIOS_FILE):
-        return {}
-    with open(USUARIOS_FILE, "r", encoding="utf-8") as f:
-        return json.load(f)
+    if os.path.exists(USUARIOS_FILE):
+        with open(USUARIOS_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
 
-def salvar_usuarios(usuarios):
-    with open(USUARIOS_FILE, "w", encoding="utf-8") as f:
-        json.dump(usuarios, f, indent=4, ensure_ascii=False)
+# ---------- ROTAS ----------
 
-# =============================
-# USUÁRIOS PADRÃO (SE NÃO EXISTIR)
-# =============================
-if not os.path.exists(USUARIOS_FILE):
-    usuarios_padrao = {
-        "1": {
-            "cpf": "04932346913",
-            "senha": "02111982",
-            "nome": "Administrador"
-        },
-        "2": {
-            "cpf": "00766969959",
-            "senha": "01061981",
-            "nome": "Usuário 2"
-        },
-        "3": {
-            "cpf": "13455528902",
-            "senha": "06102006",
-            "nome": "Usuário 3"
-        }
-    }
-    salvar_usuarios(usuarios_padrao)
-
-# =============================
-# ROTAS
-# =============================
-
-# ROTA INICIAL → LOGIN
-@app.route("/")
-def index():
-    return redirect(url_for("login_page"))
-
-# LOGIN (GET)
-@app.route("/login", methods=["GET"])
-def login_page():
-    return render_template("login.html")
-
-# LOGIN (POST)
-@app.route("/login", methods=["POST"])
+@app.route("/", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    cpf = request.form.get("cpf")
-    senha = request.form.get("senha")
+    erro = None
 
-    usuarios = carregar_usuarios()
+    if request.method == "POST":
+        cpf = request.form.get("usuario")
+        senha = request.form.get("senha")
 
-    for user in usuarios.values():
-        if user["cpf"] == cpf and user["senha"] == senha:
-            session["usuario"] = user["nome"]
-            session["cpf"] = user["cpf"]
+        usuarios = carregar_usuarios()
+
+        if cpf in usuarios and usuarios[cpf]["senha"] == senha:
+            session["usuario"] = cpf
+            session["nome"] = usuarios[cpf]["nome"]
             return redirect(url_for("home"))
+        else:
+            erro = "Usuário ou senha inválidos"
 
-    return render_template("login.html", erro="Usuário ou senha inválidos")
+    return render_template("login.html", erro=erro)
 
-# LOGOUT
-@app.route("/logout")
-def logout():
-    session.clear()
-    return redirect(url_for("login_page"))
 
-# HOME (PROTEGIDA)
 @app.route("/home")
 def home():
     if "usuario" not in session:
-        return redirect(url_for("login_page"))
+        return redirect(url_for("login"))
 
     return render_template(
         "home.html",
-        usuario=session["usuario"]
+        nome=session.get("nome")
     )
 
-# =============================
-# START (RENDER)
-# =============================
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+# ---------- START ----------
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
