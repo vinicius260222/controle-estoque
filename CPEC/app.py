@@ -23,7 +23,7 @@ def carregar_json(caminho):
 
 def salvar_json(caminho, dados):
     with open(caminho, "w", encoding="utf-8") as f:
-        json.dump(dados, f, ensure_ascii=False, indent=4)
+        json.dump(dados, f, indent=4, ensure_ascii=False)
 
 # ------------------- Login -------------------
 
@@ -72,13 +72,13 @@ def estoque():
         quantidade = request.form.get("quantidade", "").strip()
 
         if not nome_item or not quantidade.isdigit():
-            erro = "Preencha o nome do item e a quantidade corretamente."
+            erro = "Preencha todos os campos corretamente."
         else:
             quantidade = int(quantidade)
             if nome_item in estoque:
-                estoque[nome_item]["quantidade"] += quantidade
+                estoque[nome_item] += quantidade
             else:
-                estoque[nome_item] = {"quantidade": quantidade}
+                estoque[nome_item] = quantidade
             salvar_json(ESTOQUE_FILE, estoque)
             return redirect(url_for("estoque"))
 
@@ -93,13 +93,12 @@ def caixa():
 
     caixa = carregar_json(CAIXA_FILE)
     if "saldo" not in caixa:
-        caixa["saldo"] = 0
+        caixa["saldo"] = 0.0
 
     erro = None
     if request.method == "POST":
         tipo = request.form.get("tipo")
         valor = request.form.get("valor", "").strip()
-
         if not valor or not valor.replace(".", "", 1).isdigit():
             erro = "Digite um valor válido."
         else:
@@ -144,7 +143,6 @@ def relatorios():
     if "usuario" not in session:
         return redirect(url_for("login"))
 
-    relatorio = None
     if request.method == "POST":
         tipo = request.form.get("tipo")
         wb = Workbook()
@@ -154,8 +152,8 @@ def relatorios():
         if tipo == "estoque":
             dados = carregar_json(ESTOQUE_FILE)
             ws.append(["Item", "Quantidade"])
-            for item, info in dados.items():
-                ws.append([item, info["quantidade"]])
+            for item, qtd in dados.items():
+                ws.append([item, qtd])
         elif tipo == "caixa":
             dados = carregar_json(CAIXA_FILE)
             ws.append(["Saldo"])
@@ -166,7 +164,6 @@ def relatorios():
             for id_func, info in dados.items():
                 ws.append([id_func, info["nome"], info["cargo"]])
 
-        # Gerar arquivo Excel em memória
         arquivo = BytesIO()
         wb.save(arquivo)
         arquivo.seek(0)
