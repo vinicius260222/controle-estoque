@@ -26,6 +26,13 @@ def carregar_nomes():
     with open(NOMES_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
+@app.route("/cadastro-produtos")
+def cadastro_produtos():
+    if "usuario" not in session:
+        return redirect(url_for("login"))
+
+    return "<h1>Cadastro de produtos (em construção)</h1>"
+
 
 # ---------- ROTAS ----------
 
