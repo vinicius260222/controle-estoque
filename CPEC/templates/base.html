@@ -98,6 +98,39 @@
     </main>
 
 </div>
+<!-- Botão flutuante do Dashboard -->
+<button id="btnDashboard">📊 Dashboard</button>
+
+<script>
+    const btn = document.getElementById("btnDashboard");
+    btn.addEventListener("click", () => {
+        const dash = document.getElementById("dashboardAtalho");
+        if (dash) {
+            dash.classList.toggle("mostrar");
+        }
+    });
+</script>
+
+<style>
+    #btnDashboard {
+        position: fixed;
+        bottom: 25px;
+        right: 25px;
+        background: #0d6efd;
+        color: white;
+        border: none;
+        padding: 14px 22px;
+        border-radius: 50px;
+        font-size: 16px;
+        cursor: pointer;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        z-index: 9999;
+    }
+
+    #btnDashboard:hover {
+        background: #084298;
+    }
+</style>
 
 </body>
 </html>
