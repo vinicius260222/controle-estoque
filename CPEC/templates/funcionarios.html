@@ -1,94 +1,111 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Funcionários - CPEC</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    <meta charset="UTF-8">
+    <title>Funcionários</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            padding: 20px;
+        }
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background: #f2f7fa;
-    margin: 0;
-    padding: 0 50px;
-}
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
 
-h1 {
-    text-align: center;
-    margin-top: 30px;
-    font-size: 28px;
-    color: #007bff;
-}
+        form {
+            background: white;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-.erro {
-    color: red;
-    text-align: center;
-    margin-bottom: 15px;
-}
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 30px;
-}
+        form button {
+            width: 100%;
+            padding: 10px;
+            background: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
-th, td {
-    padding: 12px 15px;
-    border: 1px solid #ccc;
-    text-align: center;
-}
+        form button:hover {
+            background: #27ae60;
+        }
 
-th {
-    background: #007bff;
-    color: #fff;
-    font-weight: 500;
-}
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
 
-tbody tr:nth-child(even) {
-    background: #e9ecef;
-}
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
 
-form {
-    background: #fff;
-    padding: 20px 25px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    max-width: 600px;
-    margin: 0 auto 50px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
+        th {
+            background: #34495e;
+            color: white;
+        }
 
-form input {
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    outline: none;
-}
+        a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-form button {
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: #28a745;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
+        a:hover {
+            text-decoration: underline;
+        }
 
-form button:hover {
-    background: #218838;
-    transform: scale(1.02);
-}
-</style>
+        .erro {
+            color: red;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
-<h1>Funcionários</h1>
 
-{% if erro %}<div class="erro">{{ erro }}</div>{% endif %}
+<h2>👷 Funcionários</h2>
+
+{% if erro %}
+<p class="erro">{{ erro }}</p>
+{% endif %}
+
+<form method="POST">
+    <input type="text" name="cpf" placeholder="CPF"
+           value="{{ funcionario_editar.cpf if funcionario_editar else '' }}"
+           {% if funcionario_editar %}readonly{% endif %} required>
+
+    <input type="text" name="nome" placeholder="Nome"
+           value="{{ funcionario_editar.nome if funcionario_editar else '' }}" required>
+
+    <input type="text" name="cargo" placeholder="Cargo"
+           value="{{ funcionario_editar.cargo if funcionario_editar else '' }}" required>
+
+    <input type="number" name="dias_trabalhados" placeholder="Dias Trabalhados"
+           value="{{ funcionario_editar.dias_trabalhados if funcionario_editar else 0 }}" min="0">
+
+    <button type="submit">
+        {{ "Atualizar Funcionário" if funcionario_editar else "Cadastrar Funcionário" }}
+    </button>
+</form>
 
 <table>
     <thead>
@@ -97,6 +114,7 @@ form button:hover {
             <th>Nome</th>
             <th>Cargo</th>
             <th>Dias Trabalhados</th>
+            <th>Ação</th>
         </tr>
     </thead>
     <tbody>
@@ -106,17 +124,13 @@ form button:hover {
             <td>{{ dados.nome }}</td>
             <td>{{ dados.cargo }}</td>
             <td>{{ dados.dias_trabalhados }}</td>
+            <td>
+                <a href="{{ url_for('funcionarios', editar=cpf) }}">Editar</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
 
-<form method="POST">
-    <input type="text" name="cpf" placeholder="CPF" required>
-    <input type="text" name="nome" placeholder="Nome" required>
-    <input type="text" name="cargo" placeholder="Cargo" required>
-    <input type="number" name="dias_trabalhados" placeholder="Dias Trabalhados" value="0" min="0">
-    <button type="submit">Adicionar/Atualizar</button>
-</form>
 </body>
 </html>
