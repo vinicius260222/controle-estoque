@@ -2,103 +2,35 @@
 
 {% block content %}
 
-<style>
-    .welcome-box {
-        background: linear-gradient(135deg, #0d6efd, #084298);
-        color: white;
-        padding: 40px;
-        border-radius: 16px;
-        margin-bottom: 30px;
-        text-align: center;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-    }
+<div style="max-width:900px; margin:auto; text-align:center;">
 
-    .welcome-box h2 {
-        font-size: 36px;
-        margin-bottom: 10px;
-    }
+    <h1 style="font-size:42px; margin-bottom:10px;">
+        Bem-vindo, {{ nome_usuario }} 👋
+    </h1>
 
-    .welcome-box p {
-        font-size: 18px;
-        opacity: 0.95;
-    }
+    <p style="font-size:18px; color:#555;">
+        Sistema de controle interno da CPEC
+    </p>
 
-    .menu-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-    }
+    <div style="margin:40px 0;">
+        <input 
+            type="text" 
+            placeholder="🔍 Pesquisar produto, funcionário ou registro..."
+            style="
+                width:100%;
+                max-width:500px;
+                padding:14px;
+                font-size:16px;
+                border-radius:10px;
+                border:1px solid #ccc;
+            "
+        >
+    </div>
 
-    .menu-card {
-        background: white;
-        border-radius: 14px;
-        padding: 25px;
-        text-align: center;
-        text-decoration: none;
-        color: #333;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-        transition: all 0.25s ease;
-        font-weight: 600;
-    }
+    <p style="color:#666;">
+        Use o botão <strong>📊</strong> no canto da tela para acessar o painel rápido a qualquer momento.
+    </p>
 
-    .menu-card:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 14px 30px rgba(0,0,0,0.15);
-        color: #0d6efd;
-    }
-
-    .menu-card span {
-        display: block;
-        font-size: 42px;
-        margin-bottom: 10px;
-    }
-</style>
-
-<div class="welcome-box">
-    <h2>Bem-vindo, {{ nome_usuario }} 👋</h2>
-    <p>Escolha abaixo o que você deseja fazer hoje</p>
-</div>
-
-<div class="menu-grid">
-    <a class="menu-card" href="{{ url_for('cadastro') }}">
-        <span>📦</span>
-        Cadastro de Produtos
-    </a>
-
-    <a class="menu-card" href="{{ url_for('producao') }}">
-        <span>🏭</span>
-        Produção
-    </a>
-
-    <a class="menu-card" href="{{ url_for('movimentacoes') }}">
-        <span>🔄</span>
-        Movimentações
-    </a>
-
-    <a class="menu-card" href="{{ url_for('despesas') }}">
-        <span>💰</span>
-        Despesas
-    </a>
-
-    <a class="menu-card" href="{{ url_for('funcionarios') }}">
-        <span>👷</span>
-        Funcionários
-    </a>
-
-    <a class="menu-card" href="{{ url_for('ponto') }}">
-        <span>📅</span>
-        Controle de Ponto
-    </a>
-
-    <a class="menu-card" href="{{ url_for('exportar') }}">
-        <span>📊</span>
-        Exportar Estoque
-    </a>
-
-    <a class="menu-card" href="{{ url_for('logout') }}">
-        <span>🚪</span>
-        Sair
-    </a>
 </div>
 
 {% endblock %}
