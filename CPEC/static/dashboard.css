@@ -353,3 +353,41 @@
         transform: translateY(0);
     }
 }
+/* ------------------ CARDS NO DARK MODE ------------------ */
+body.dark-mode .card-dashboard {
+    background: linear-gradient(135deg, #2c2f3a, #1f1f2b);
+    filter: brightness(0.85);
+    transition: transform 0.35s ease, box-shadow 0.35s ease, filter 0.35s ease;
+    position: relative;
+}
+
+/* Glow suave por trás */
+body.dark-mode .card-dashboard::before {
+    content: "";
+    position: absolute;
+    inset: -4px;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, rgba(0,0,0,0) 70%);
+    z-index: 0;
+    border-radius: 22px;
+    pointer-events: none;
+}
+
+/* Garante que o conteúdo do card fique acima do glow */
+body.dark-mode .card-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hover mantém efeito vivo e mais forte */
+body.dark-mode .card-dashboard:hover {
+    transform: scale(1.09);
+    filter: brightness(1.12) saturate(1.15);
+    box-shadow: 0 28px 55px rgba(0,0,0,0.55);
+}
+
+body.dark-mode .card-dashboard:hover .icone {
+    font-size: 150px;
+    opacity: 0.45;
+    transform: translate(12px, -12px) rotate(-6deg);
+    filter: drop-shadow(0 0 18px rgba(255,255,255,0.35));
+}
