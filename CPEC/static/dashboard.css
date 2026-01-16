@@ -1,10 +1,11 @@
-/* RESET BÁSICO */
+/* RESET */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: "Segoe UI", Arial, sans-serif;
 }
+
 :root {
     --bg-page: #f4f6f9;
     --bg-topo: linear-gradient(135deg, #0d47a1, #1976d2);
@@ -18,7 +19,6 @@
     --bg-page: #0f172a;
     --bg-topo: linear-gradient(135deg, #020617, #020617);
     --text-main: #e5e7eb;
-    --text-light: #ffffff;
     --overlay: rgba(0,0,0,0.55);
 }
 
@@ -26,11 +26,10 @@ body {
     background: var(--bg-page);
     min-height: 100vh;
     overflow-x: hidden;
-    position: relative;
     transition: background 0.4s ease;
 }
 
-/* LOGO DE FUNDO */
+/* LOGO FUNDO */
 .logo-fundo {
     position: fixed;
     inset: 0;
@@ -46,31 +45,67 @@ body {
     opacity: 0.035;
 }
 
-/* OVERLAY ESCURECEDOR */
+/* OVERLAY */
 .overlay {
+    position: fixed;
+    inset: 0;
     background: var(--overlay);
+    z-index: 1;
 }
 
 /* TOPO */
 .topo {
+    position: relative;
+    z-index: 2;
+    padding: 40px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     background: var(--bg-topo);
+    border-radius: 0 0 32px 32px;
 }
 
 .topo h1 {
-    font-size: 42px;
+    font-size: 46px;
     font-weight: 800;
     color: #fff;
+    line-height: 1.1;
 }
 
 .topo h1 span {
+    font-size: 52px;
     color: #ffeb3b;
+}
+
+/* AÇÕES TOPO */
+.topo-acoes {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* BOTÕES */
+.btn-dark {
+    background: rgba(255,255,255,0.18);
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.btn-dark:hover {
+    background: rgba(255,255,255,0.35);
+    transform: scale(1.15);
 }
 
 .btn-logout {
     background: #ff4d4d;
     color: #fff;
     padding: 12px 26px;
-    border-radius: 10px;
+    border-radius: 12px;
     text-decoration: none;
     font-weight: 700;
     transition: 0.3s ease;
@@ -78,39 +113,33 @@ body {
 
 .btn-logout:hover {
     background: #e63b3b;
-    transform: scale(1.05);
+    transform: scale(1.08);
 }
 
 /* DASHBOARD */
 .dashboard {
     position: relative;
     z-index: 2;
-    padding: 0 60px 60px;
+    padding: 60px;
 }
 
-/* CONTAINER DOS CARDS */
+/* CARDS */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 45px;
 }
 
-/* CARD BASE */
 .card-dashboard {
-    position: relative;
     height: 190px;
     border-radius: 22px;
     cursor: pointer;
     overflow: hidden;
-    transition: 
-        transform 0.35s ease,
-        box-shadow 0.35s ease;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
 
-/* CONTEÚDO DO CARD */
 .card-content {
     position: relative;
-    z-index: 2;
     height: 100%;
     padding: 30px;
     display: flex;
@@ -122,24 +151,17 @@ body {
 /* ÍCONE */
 .card-dashboard .icone {
     position: absolute;
-    top: 18px;
-    right: 22px;
-    font-size: 95px;
-    opacity: 0.13;
-    pointer-events: none;
-    filter: drop-shadow(0 0 0 transparent);
-    transition: 
-        transform 0.45s ease,
-        font-size 0.45s ease,
-        opacity 0.45s ease,
-        filter 0.45s ease;
+    top: 10px;
+    right: 18px;
+    font-size: 110px;
+    opacity: 0.18;
+    transition: 0.45s ease;
 }
 
 /* TÍTULO */
 .card-dashboard h2 {
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 800;
-    letter-spacing: 0.6px;
 }
 
 /* DESCRIÇÃO */
@@ -151,61 +173,26 @@ body {
     transition: 0.35s ease;
 }
 
-/* CORES DOS CARDS */
-.card-dashboard.estoque {
-    background: linear-gradient(135deg, #f6c23e, #f39c12);
-}
+/* CORES */
+.estoque { background: linear-gradient(135deg, #f6c23e, #f39c12); }
+.funcionarios { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.caixa { background: linear-gradient(135deg, #3498db, #1e6fbf); }
+.relatorios { background: linear-gradient(135deg, #9b59b6, #7e3ea1); }
 
-.card-dashboard.funcionarios {
-    background: linear-gradient(135deg, #2ecc71, #27ae60);
-}
-
-.card-dashboard.caixa {
-    background: linear-gradient(135deg, #3498db, #1e6fbf);
-}
-
-.card-dashboard.relatorios {
-    background: linear-gradient(135deg, #9b59b6, #7e3ea1);
-}
-
-/* ESCURECE FUNDO AO PASSAR NOS CARDS */
-.cards-container:hover ~ .overlay {
-    background: rgba(0,0,0,0.28);
-}
-
-/* HOVER NO CARD */
+/* HOVER */
 .card-dashboard:hover {
     transform: scale(1.09);
-    box-shadow: 0 28px 55px rgba(0,0,0,0.4);
-    z-index: 10;
+    box-shadow: 0 28px 55px rgba(0,0,0,0.45);
 }
 
-/* ÍCONE NO HOVER */
 .card-dashboard:hover .icone {
-    font-size: 135px;
-    opacity: 0.42;
-    transform: translate(14px, -14px) rotate(-6deg);
+    font-size: 150px;
+    opacity: 0.45;
+    transform: translate(12px, -12px) rotate(-6deg);
     filter: drop-shadow(0 0 18px rgba(255,255,255,0.35));
 }
 
-/* DESCRIÇÃO APARECE */
 .card-dashboard:hover .card-desc {
     opacity: 1;
     transform: translateY(0);
-}
-.btn-dark {
-    background: rgba(255,255,255,0.15);
-    border: none;
-    color: #fff;
-    font-size: 20px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    margin-right: 12px;
-    transition: 0.3s ease;
-}
-
-.btn-dark:hover {
-    background: rgba(255,255,255,0.3);
-    transform: scale(1.1);
 }
