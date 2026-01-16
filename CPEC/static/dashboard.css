@@ -5,6 +5,22 @@
     box-sizing: border-box;
     font-family: "Segoe UI", Arial, sans-serif;
 }
+:root {
+    --bg-page: #f4f6f9;
+    --bg-topo: linear-gradient(135deg, #0d47a1, #1976d2);
+    --text-main: #0a3d62;
+    --text-light: #ffffff;
+    --overlay: rgba(0,0,0,0.28);
+}
+
+/* MODO ESCURO */
+.dark-mode {
+    --bg-page: #0f172a;
+    --bg-topo: linear-gradient(135deg, #020617, #020617);
+    --text-main: #e5e7eb;
+    --text-light: #ffffff;
+    --overlay: rgba(0,0,0,0.55);
+}
 
 body {
     background: #f4f6f9;
