@@ -18,10 +18,11 @@
 
 <!-- TOPO -->
 <div class="topo">
-    <h1>
-        Seja bem-vindo,<br>
-        <span>{{ session['usuario_nome'] }}</span>
-    </h1>
+    
+    <h2 class="welcome-text">
+    Bem-vindo, {{ session['nome'] }}
+</h2>
+
 
     <div class="topo-acoes">
         <button class="btn-dark" onclick="toggleDarkMode()">🌙</button>
