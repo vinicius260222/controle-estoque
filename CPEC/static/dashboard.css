@@ -137,6 +137,18 @@ body {
     overflow: hidden;
     transition: transform 0.35s ease, box-shadow 0.35s ease;
 }
+.card-dashboard::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        120deg,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0)
+    );
+    opacity: 0;
+    transition: 0.4s ease;
+}
 
 .card-content {
     position: relative;
@@ -183,6 +195,9 @@ body {
 .card-dashboard:hover {
     transform: scale(1.09);
     box-shadow: 0 28px 55px rgba(0,0,0,0.45);
+    filter: saturate(1.25) brightness(1.12);
+    card-dashboard:hover::after {
+    opacity: 1;
 }
 
 .card-dashboard:hover .icone {
