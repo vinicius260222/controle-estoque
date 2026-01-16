@@ -312,3 +312,44 @@
 .card-dashboard:nth-child(2) { animation-delay: 0.25s; }
 .card-dashboard:nth-child(3) { animation-delay: 0.4s; }
 .card-dashboard:nth-child(4) { animation-delay: 0.55s; }
+/* WELCOME PREMIUM */
+.welcome {
+    animation: welcomeIn 1.2s ease forwards;
+}
+
+.welcome h1 {
+    font-size: 58px;
+    font-weight: 900;
+    color: #ffffff;
+    line-height: 1.1;
+    letter-spacing: -1px;
+}
+
+.welcome h1 span {
+    display: block;
+    margin-top: 6px;
+    font-size: 72px;
+    font-weight: 900;
+    color: #ffeb3b;
+    text-shadow: 0 6px 22px rgba(0,0,0,0.35);
+}
+
+.welcome-sub {
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    opacity: 0.85;
+    color: rgba(255,255,255,0.9);
+}
+
+/* ANIMAÇÃO */
+@keyframes welcomeIn {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
