@@ -19,7 +19,7 @@
 <!-- TOPO -->
 <div class="topo">
 
-    <!-- WELCOME PREMIUM -->
+    <!-- BLOCO WELCOME -->
     <div class="welcome">
         <h1>
             Bem-vindo,
@@ -30,3 +30,53 @@
         </p>
     </div>
 
+    <!-- AÇÕES -->
+    <div class="topo-acoes">
+        <button class="btn-dark" onclick="toggleDarkMode()">🌙</button>
+        <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+    </div>
+
+</div> <!-- ✅ FECHAMENTO CORRETO DO TOPO -->
+
+<!-- DASHBOARD -->
+<div class="dashboard">
+    <div class="cards-container">
+
+        <div class="card card-dashboard estoque" onclick="location.href='{{ url_for('estoque') }}'">
+            <div class="card-content">
+                <div class="icone">📦</div>
+                <h2>Estoque</h2>
+                <p class="card-desc">Controle e gerenciamento de materiais</p>
+            </div>
+        </div>
+
+        <div class="card card-dashboard funcionarios" onclick="location.href='{{ url_for('funcionarios') }}'">
+            <div class="card-content">
+                <div class="icone">👷</div>
+                <h2>Funcionários</h2>
+                <p class="card-desc">Cadastro e controle de equipe</p>
+            </div>
+        </div>
+
+        <div class="card card-dashboard caixa" onclick="location.href='{{ url_for('caixa') }}'">
+            <div class="card-content">
+                <div class="icone">💰</div>
+                <h2>Caixa</h2>
+                <p class="card-desc">Entradas, saídas e saldo financeiro</p>
+            </div>
+        </div>
+
+        <div class="card card-dashboard relatorios" onclick="location.href='{{ url_for('relatorio_estoque') }}'">
+            <div class="card-content">
+                <div class="icone">📊</div>
+                <h2>Relatórios</h2>
+                <p class="card-desc">Análises e relatórios do sistema</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='darkmode.js') }}"></script>
+</body>
+</html>
