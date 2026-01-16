@@ -5,10 +5,16 @@
     box-sizing: border-box;
     font-family: "Segoe UI", Arial, sans-serif;
 }
-
 :root {
     --bg-page: #f4f6f9;
-    --bg-topo: linear-gradient(135deg, #0d47a1, #1976d2);
+
+    /* TOPO - MODO CLARO (AZUL) */
+    --bg-topo: linear-gradient(
+        135deg,
+        #0d47a1 0%,
+        #1976d2 100%
+    );
+
     --text-main: #0a3d62;
     --text-light: #ffffff;
     --overlay: rgba(0,0,0,0.28);
@@ -17,18 +23,19 @@
 /* MODO ESCURO */
 .dark-mode {
     --bg-page: #0f172a;
-    --bg-topo: linear-gradient(135deg, #020617, #020617);
+
+    /* TOPO - MODO ESCURO (ROXO) */
+    --bg-topo: linear-gradient(
+        135deg,
+        #1a0633 0%,     /* roxo bem escuro (lado do bem-vindo) */
+        #3b0f6f 60%,    /* roxo médio */
+        #5b21b6 100%    /* roxo mais vivo (lado logout/dark) */
+    );
+
     --text-main: #e5e7eb;
+    --text-light: #ffffff;
     --overlay: rgba(0,0,0,0.55);
 }
-
-body {
-    background: var(--bg-page);
-    min-height: 100vh;
-    overflow-x: hidden;
-    transition: background 0.4s ease;
-}
-
 /* LOGO FUNDO */
 .logo-fundo {
     position: fixed;
@@ -68,13 +75,22 @@ body {
 .topo h1 {
     font-size: 46px;
     font-weight: 800;
-    color: #fff;
-    line-height: 1.1;
+    color: var(--text-light);
+    line-height: 1.15;
 }
 
+/* NOME DO USUÁRIO */
 .topo h1 span {
+    display: block;
     font-size: 52px;
+    font-weight: 900;
+    margin-top: 6px;
     color: #ffeb3b;
+}
+
+/* Nome no modo escuro — mais elegante */
+.dark-mode .topo h1 span {
+    color: #c084fc; /* lilás claro, contraste perfeito no roxo */
 }
 
 /* AÇÕES TOPO */
