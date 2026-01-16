@@ -258,3 +258,17 @@ body {
     opacity: 1;
     transform: translateY(0);
 }
+/* QUANDO O MOUSE ESTÁ NA ÁREA DOS CARDS, TODOS FICAM MAIS DISCRETOS */
+.cards-container:hover .card-dashboard {
+    filter: saturate(0.75) brightness(0.85);
+    transform: scale(0.98);
+    transition: 0.35s ease;
+}
+
+/* CARD ATIVO – VOLTA AO NORMAL E GANHA VIDA */
+.cards-container:hover .card-dashboard:hover {
+    filter: saturate(1.35) brightness(1.15);
+    transform: scale(1.09);
+    box-shadow: 0 28px 55px rgba(0,0,0,0.45);
+    z-index: 10;
+}
