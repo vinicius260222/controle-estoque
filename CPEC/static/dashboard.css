@@ -111,11 +111,19 @@ body {
     color: #fff;
 }
 
-/* ÍCONE */
 .card-dashboard .icone {
-    font-size: 42px;
-    margin-bottom: 10px;
-    transition: transform 0.35s ease;
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    font-size: 90px;
+    opacity: 0.18;
+    pointer-events: none;
+    transition: 
+        transform 0.45s ease,
+        font-size 0.45s ease,
+        opacity 0.45s ease;
+}
+
 }
 
 /* TÍTULO */
@@ -162,9 +170,10 @@ body {
     z-index: 10;
 }
 
-/* ÍCONE SALTA */
 .card-dashboard:hover .icone {
-    transform: translateY(-6px) scale(1.1);
+    font-size: 125px;
+    opacity: 0.32;
+    transform: translate(10px, -10px) rotate(-5deg);
 }
 
 /* DESCRIÇÃO APARECE */
