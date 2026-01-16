@@ -391,3 +391,15 @@ body.dark-mode .card-dashboard:hover .icone {
     transform: translate(12px, -12px) rotate(-6deg);
     filter: drop-shadow(0 0 18px rgba(255,255,255,0.35));
 }
+/* Ícones no dark mode - brilho extra no hover */
+body.dark-mode .card-dashboard .icone {
+    opacity: 0.12; /* apagado normalmente */
+    transition: transform 0.45s ease, font-size 0.45s ease, opacity 0.45s ease, filter 0.45s ease;
+}
+
+body.dark-mode .card-dashboard:hover .icone {
+    opacity: 0.85; /* muito mais visível */
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.8)); /* glow intenso */
+    font-size: 150px; /* mantém o tamanho grande */
+    transform: translate(12px, -12px) rotate(-6deg);
+}
