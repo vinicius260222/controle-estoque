@@ -7,34 +7,23 @@
 </head>
 <body>
 
-<div class="login-page">
-
-    <!-- Fundo gradiente -->
-    <div class="login-background"></div>
-
-    <!-- Conteúdo central -->
     <div class="login-container">
-        
-        <!-- Logo grande -->
-        <div class="logo-container">
-            <img src="{{ url_for('static', filename='logo-cpec.png') }}" alt="CPEC Logo">
-            <p class="slogan">Construindo soluções pré-moldadas com qualidade e confiança.</p>
-        </div>
+        <div class="login-card">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="logo" alt="CPEC Logo">
+            <h2>Bem-vindo à CPEC</h2>
+            <p class="frase">Preparado para iniciar seu trabalho?</p>
 
-        <!-- Formulário -->
-        <form method="POST" action="{{ url_for('login') }}" class="login-form">
             {% if erro %}
-                <p class="erro">{{ erro }}</p>
+            <div class="erro">{{ erro }}</div>
             {% endif %}
-            <input type="text" name="usuario" placeholder="CPF" required>
-            <input type="password" name="senha" placeholder="Senha" required>
-            <button type="submit">Entrar</button>
-        </form>
 
+            <form method="POST">
+                <input type="text" name="usuario" placeholder="CPF" required>
+                <input type="password" name="senha" placeholder="Senha" required>
+                <button type="submit">Entrar</button>
+            </form>
+        </div>
     </div>
-
-</div>
 
 </body>
 </html>
-
