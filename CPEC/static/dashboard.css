@@ -1,14 +1,16 @@
+/* RESET BÁSICO */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
 body {
-    background: #f4f6f8;
+    background: #f4f6f9;
     min-height: 100vh;
     overflow-x: hidden;
+    position: relative;
 }
 
 /* LOGO DE FUNDO */
@@ -21,282 +23,152 @@ body {
     pointer-events: none;
     z-index: 0;
 }
-/* fundo escurecendo */
-.dashboard {
-    position: relative;
-}
-
-.dashboard::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.35);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 1;
-}
-
-/* quando passa no card */
-.card-dashboard:hover ~ .dashboard::after {
-    opacity: 1;
-}
-
-/* card principal */
-.card-dashboard {
-    position: relative;
-    z-index: 2;
-    border-radius: 18px;
-    padding: 28px;
-    transition: all 0.35s ease;
-    transform: translateY(0) scale(1);
-}
-
-/* animação viva */
-.card-dashboard:hover {
-    transform: translateY(-14px) scale(1.08);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-    filter: brightness(1.25) saturate(1.3);
-}
-
-/* descrição escondida */
-.card-desc {
-    opacity: 0;
-    margin-top: 12px;
-    font-size: 15px;
-    transition: all 0.3s ease;
-    transform: translateY(10px);
-}
-
-/* descrição aparece */
-.card-dashboard:hover .card-desc {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* ícone ganha força */
-.card-dashboard i {
-    font-size: 48px;
-    transition: transform 0.3s ease;
-}
-
-.card-dashboard:hover i {
-    transform: scale(1.15);
-}
 
 .logo-fundo img {
-    width: 55%;
-    opacity: 0.05;
-}
-/* ANIMAÇÃO DE ENTRADA */
-.card {
-    opacity: 0;
-    transform: translateY(40px) scale(0.95);
-    animation: subirCard 0.7s ease forwards;
+    width: 420px;
+    opacity: 0.04;
 }
 
-.card:nth-child(1) { animation-delay: 0.1s; }
-.card:nth-child(2) { animation-delay: 0.25s; }
-.card:nth-child(3) { animation-delay: 0.4s; }
-.card:nth-child(4) { animation-delay: 0.55s; }
-
-@keyframes subirCard {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+/* OVERLAY ESCURECEDOR */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    transition: background 0.4s ease;
+    z-index: 1;
+    pointer-events: none;
 }
-
 
 /* TOPO */
 .topo {
     position: relative;
     z-index: 2;
-    padding: 40px;
-    background: linear-gradient(135deg, #0a3d62, #1e90ff);
-    color: white;
+    padding: 30px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .topo h1 {
-    font-size: 42px;
+    font-size: 38px;
+    font-weight: 700;
+    color: #0a3d62;
 }
 
-.topo span {
-    font-weight: bold;
+.topo h1 span {
+    color: #1e90ff;
 }
 
 .btn-logout {
-    background: white;
-    color: #0a3d62;
+    background: #ff4d4d;
+    color: #fff;
     padding: 10px 22px;
-    border-radius: 25px;
+    border-radius: 8px;
     text-decoration: none;
-    font-weight: bold;
+    font-weight: 600;
     transition: 0.3s;
 }
 
 .btn-logout:hover {
-    background: #e6e6e6;
+    background: #e63b3b;
 }
 
-/* CARDS */
-.cards-container {
+/* DASHBOARD */
+.dashboard {
     position: relative;
     z-index: 2;
+    padding: 40px;
+}
+
+/* CONTAINER DOS CARDS */
+.cards-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 40px;
-    padding: 60px;
 }
 
-.card {
-    height: 200px;
-    border-radius: 22px;
-    padding: 30px;
-    color: white;
+/* CARD BASE */
+.card-dashboard {
+    position: relative;
+    height: 180px;
+    border-radius: 20px;
     cursor: pointer;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
-    transform-style: preserve-3d;
-    perspective: 1000px;
+    overflow: hidden;
+    transition: 
+        transform 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+/* CONTEÚDO DO CARD */
+.card-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    padding: 28px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    color: #fff;
 }
 
-.card h2 {
-    font-size: 28px;
+/* ÍCONE */
+.card-dashboard .icone {
+    font-size: 42px;
+    margin-bottom: 10px;
+    transition: transform 0.35s ease;
 }
 
-.icone {
-    font-size: 48px;
-    margin-bottom: 15px;
-    transform: translateZ(30px);
+/* TÍTULO */
+.card-dashboard h2 {
+    font-size: 26px;
+    margin-bottom: 6px;
 }
 
-/* CORES */
-.estoque {
-    background: linear-gradient(135deg, #f6b93b, #e58e26);
-}
-
-.funcionarios {
-    background: linear-gradient(135deg, #78e08f, #38ada9);
-}
-
-.caixa {
-    background: linear-gradient(135deg, #74b9ff, #0984e3);
-}
-
-.relatorios {
-    background: linear-gradient(135deg, #a29bfe, #6c5ce7);
-}
-
-/* HOVER BASE */
-.card:hover {
-    box-shadow: 0 25px 45px rgba(0,0,0,0.25);
-}
-
-/* ===== CARD MODERNO TECNOLÓGICO ===== */
-.card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 20px;
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
-    background-size: 200% 200%;
-    color: white;
-    transition: 
-        transform 0.4s ease,
-        box-shadow 0.4s ease,
-        background-position 0.6s ease;
-}
-
-/* brilho interno */
-.card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        circle at top left,
-        rgba(255,255,255,0.25),
-        transparent 60%
-    );
+/* DESCRIÇÃO (ESCONDIDA) */
+.card-desc {
+    font-size: 15px;
     opacity: 0;
-    transition: opacity 0.4s ease;
+    transform: translateY(10px);
+    transition: 0.35s ease;
 }
 
-/* HOVER REAL */
-.card:hover {
-    transform: translateY(-14px) scale(1.05);
-    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
-    background-position: 100% 100%;
+/* CORES DOS CARDS */
+.card-dashboard.estoque {
+    background: linear-gradient(135deg, #f6c23e, #f39c12);
 }
 
-.card:hover::before {
+.card-dashboard.funcionarios {
+    background: linear-gradient(135deg, #2ecc71, #27ae60);
+}
+
+.card-dashboard.caixa {
+    background: linear-gradient(135deg, #3498db, #1e6fbf);
+}
+
+.card-dashboard.relatorios {
+    background: linear-gradient(135deg, #9b59b6, #7e3ea1);
+}
+
+/* HOVER GLOBAL – ESCURECE FUNDO */
+.cards-container:hover ~ .overlay,
+.cards-container:hover + .overlay {
+    background: rgba(0,0,0,0.25);
+}
+
+/* HOVER NO CARD */
+.card-dashboard:hover {
+    transform: scale(1.08);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    z-index: 10;
+}
+
+/* ÍCONE SALTA */
+.card-dashboard:hover .icone {
+    transform: translateY(-6px) scale(1.1);
+}
+
+/* DESCRIÇÃO APARECE */
+.card-dashboard:hover .card-desc {
     opacity: 1;
-}
-
-/* texto */
-.card h3 {
-    font-size: 1.6rem;
-    font-weight: 600;
-}
-
-.card p {
-    opacity: 0.85;
-}
-/* BASE DO CARD (SEM COR FIXA) */
-.card {
-    position: relative;
-    overflow: hidden;
-    border-radius: 22px;
-    color: white;
-    transition:
-        transform 0.4s ease,
-        box-shadow 0.4s ease,
-        background-position 0.6s ease;
-    background-size: 200% 200%;
-}
-
-/* ===== CORES POR TIPO ===== */
-.card.estoque {
-    background: linear-gradient(135deg, #f6d365, #fda085);
-}
-
-.card.caixa {
-    background: linear-gradient(135deg, #43cea2, #185a9d);
-}
-
-.card.funcionarios {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-}
-
-.card.relatorios {
-    background: linear-gradient(135deg, #ff758c, #ff7eb3);
-}
-
-/* HOVER */
-.card:hover {
-    transform: translateY(-14px) scale(1.06);
-    box-shadow: 0 28px 60px rgba(0,0,0,0.35);
-    background-position: 100% 100%;
-}
-
-/* brilho suave */
-.card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-        circle at top left,
-        rgba(255,255,255,0.35),
-        transparent 60%
-    );
-    opacity: 0;
-    transition: opacity 0.4s ease;
-}
-
-.card:hover::before {
-    opacity: 1;
+    transform: translateY(0);
 }
