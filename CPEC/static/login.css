@@ -1,0 +1,123 @@
+/* RESET BÁSICO */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+/* PAGINA */
+body, html {
+    height: 100%;
+}
+
+/* Fundo com gradiente */
+.login-background {
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+    z-index: 0;
+}
+
+/* Conteúdo central */
+.login-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+/* Card do login */
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 50px 40px;
+    width: 400px;
+    max-width: 90%;
+    text-align: center;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+    animation: fadeSlide 0.8s ease forwards;
+}
+
+/* Logo */
+.logo-container img {
+    width: 150px;
+    margin-bottom: 15px;
+    animation: scaleUp 0.6s ease forwards;
+}
+
+.slogan {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 30px;
+}
+
+/* Formulário */
+.login-form input {
+    width: 100%;
+    padding: 14px 16px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.login-form input:focus {
+    border-color: #1976d2;
+    box-shadow: 0 0 8px rgba(25,118,210,0.3);
+    outline: none;
+}
+
+.login-form button {
+    width: 100%;
+    padding: 14px;
+    background: #1976d2;
+    color: #fff;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-form button:hover {
+    background: #0d47a1;
+    transform: scale(1.03);
+}
+
+/* Mensagem de erro */
+.erro {
+    color: #e53935;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+/* Animações */
+@keyframes fadeSlide {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleUp {
+    0% { opacity: 0; transform: scale(0.6); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+/* Responsividade */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 30px 20px;
+    }
+
+    .login-form button {
+        font-size: 16px;
+    }
+
+    .logo-container img {
+        width: 120px;
+    }
+}
