@@ -272,3 +272,27 @@ body {
     box-shadow: 0 28px 55px rgba(0,0,0,0.45);
     z-index: 10;
 }
+/* ===== ANIMAÇÃO DE ENTRADA DOS CARDS ===== */
+
+@keyframes cardEntrada {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Estado inicial */
+.card-dashboard {
+    opacity: 0;
+    animation: cardEntrada 0.8s ease forwards;
+}
+
+/* Delay em cascata (efeito premium) */
+.card-dashboard:nth-child(1) { animation-delay: 0.1s; }
+.card-dashboard:nth-child(2) { animation-delay: 0.25s; }
+.card-dashboard:nth-child(3) { animation-delay: 0.4s; }
+.card-dashboard:nth-child(4) { animation-delay: 0.55s; }
