@@ -1,129 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard - CPEC</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
 
-body {
-    font-family: 'Roboto', sans-serif;
-    background: #f2f7fa;
-    margin: 0;
-}
-
-header {
-    background: #007bff;
-    color: #fff;
-    padding: 30px 20px;
-    text-align: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-header h1 {
-    margin: 0;
-    font-size: 32px;
-}
-
-.saudacao {
-    margin-top: 10px;
-    font-size: 22px;
-    color: #fff;
-}
-
-.container {
-    position: relative;
-    padding: 80px 50px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 50px;
-    justify-items: center;
-    align-items: center;
-}
-
-.fundo-logo {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.05;
-    max-width: 700px;
-    z-index: 0;
-}
-
-.card {
-    position: relative;
-    z-index: 1;
-    width: 220px;
-    height: 180px;
-    border-radius: 20px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    font-size: 24px;
-    cursor: pointer;
-    transition: transform 0.4s, box-shadow 0.4s;
-    color: #fff;
-    font-weight: 500;
-}
-
-.card:hover {
-    transform: scale(1.2);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-}
-
-.card span {
-    font-size: 50px;
-    margin-bottom: 15px;
-}
-
-/* Cores diferentes para cada card */
-.card.estoque { background: #FFC107; }       /* Amarelo */
-.card.caixa { background: #FF5722; }         /* Laranja */
-.card.funcionarios { background: #28A745; }  /* Verde */
-.card.relatorios { background: #007BFF; }    /* Azul */
-
-footer {
-    text-align: center;
-    padding: 15px;
-    color: #555;
-    background: #e6e6e6;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-}
-</style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <script defer src="{{ url_for('static', filename='cards-parallax.js') }}"></script>
 </head>
 <body>
-<header>
-    <h1>Dashboard</h1>
-    <div class="saudacao">Seja bem-vindo, {{ session['nome'] }}! 😎</div>
-</header>
 
-<!-- Logo de fundo -->
-<img src="{{ url_for('static', filename='logo-cpec.png') }}" class="fundo-logo" alt="CPEC Logo">
-
-<div class="container">
-    <div class="card estoque" onclick="location.href='{{ url_for('estoque') }}'">
-        <span>📦</span>
-        Estoque
-    </div>
-    <div class="card caixa" onclick="location.href='{{ url_for('caixa') }}'">
-        <span>💰</span>
-        Caixa
-    </div>
-    <div class="card funcionarios" onclick="location.href='{{ url_for('funcionarios') }}'">
-        <span>👥</span>
-        Funcionários
-    </div>
-   <div class="card relatorios" onclick="location.href='{{ url_for('relatorio_estoque') }}'">
-        <span>📊</span>
-        Relatórios
-    </div>
+<!-- LOGO DE FUNDO -->
+<div class="logo-fundo">
+    <img src="{{ url_for('static', filename='logo.png') }}">
 </div>
 
-<footer>Ferreira Pré-Moldados © 2026</footer>
+<!-- TOPO -->
+<div class="topo">
+    <h1>Seja bem-vindo, <span>{{ session['usuario_nome'] }}</span></h1>
+
+    <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+</div>
+
+<!-- CARDS -->
+<div class="cards-container">
+
+    <div class="card estoque" onclick="location.href='{{ url_for('estoque') }}'">
+        <div class="icone">📦</div>
+        <h2>Estoque</h2>
+    </div>
+
+    <div class="card funcionarios" onclick="location.href='{{ url_for('funcionarios') }}'">
+        <div class="icone">👷</div>
+        <h2>Funcionários</h2>
+    </div>
+
+    <div class="card caixa" onclick="location.href='{{ url_for('caixa') }}'">
+        <div class="icone">💰</div>
+        <h2>Caixa</h2>
+    </div>
+
+    <div class="card relatorios" onclick="location.href='{{ url_for('relatorio_estoque') }}'">
+        <div class="icone">📊</div>
+        <h2>Relatórios</h2>
+    </div>
+
+</div>
+
 </body>
 </html>
