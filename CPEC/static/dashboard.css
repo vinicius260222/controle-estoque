@@ -25,8 +25,8 @@ body {
 }
 
 .logo-fundo img {
-    width: 420px;
-    opacity: 0.04;
+    width: 440px;
+    opacity: 0.035;
 }
 
 /* OVERLAY ESCURECEDOR */
@@ -43,55 +43,60 @@ body {
 .topo {
     position: relative;
     z-index: 2;
-    padding: 30px 40px;
+    padding: 40px 60px;
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 50px;
 }
 
 .topo h1 {
-    font-size: 38px;
-    font-weight: 700;
-    color: #0a3d62;
+    font-size: 42px;
+    font-weight: 800;
+    color: #fff;
 }
 
 .topo h1 span {
-    color: #1e90ff;
+    color: #ffeb3b;
 }
 
 .btn-logout {
     background: #ff4d4d;
     color: #fff;
-    padding: 10px 22px;
-    border-radius: 8px;
+    padding: 12px 26px;
+    border-radius: 10px;
     text-decoration: none;
-    font-weight: 600;
-    transition: 0.3s;
+    font-weight: 700;
+    transition: 0.3s ease;
 }
 
 .btn-logout:hover {
     background: #e63b3b;
+    transform: scale(1.05);
 }
 
 /* DASHBOARD */
 .dashboard {
     position: relative;
     z-index: 2;
-    padding: 40px;
+    padding: 0 60px 60px;
 }
 
 /* CONTAINER DOS CARDS */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 40px;
+    gap: 45px;
 }
 
 /* CARD BASE */
 .card-dashboard {
     position: relative;
-    height: 180px;
-    border-radius: 20px;
+    height: 190px;
+    border-radius: 22px;
     cursor: pointer;
     overflow: hidden;
     transition: 
@@ -104,36 +109,39 @@ body {
     position: relative;
     z-index: 2;
     height: 100%;
-    padding: 28px;
+    padding: 30px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     color: #fff;
 }
 
+/* ÍCONE */
 .card-dashboard .icone {
     position: absolute;
-    top: 20px;
-    right: 24px;
-    font-size: 90px;
-    opacity: 0.18;
+    top: 18px;
+    right: 22px;
+    font-size: 95px;
+    opacity: 0.13;
     pointer-events: none;
+    filter: drop-shadow(0 0 0 transparent);
     transition: 
         transform 0.45s ease,
         font-size 0.45s ease,
-        opacity 0.45s ease;
-}
-
+        opacity 0.45s ease,
+        filter 0.45s ease;
 }
 
 /* TÍTULO */
 .card-dashboard h2 {
-    font-size: 26px;
-    margin-bottom: 6px;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 0.6px;
 }
 
-/* DESCRIÇÃO (ESCONDIDA) */
+/* DESCRIÇÃO */
 .card-desc {
+    margin-top: 8px;
     font-size: 15px;
     opacity: 0;
     transform: translateY(10px);
@@ -157,23 +165,24 @@ body {
     background: linear-gradient(135deg, #9b59b6, #7e3ea1);
 }
 
-/* HOVER GLOBAL – ESCURECE FUNDO */
-.cards-container:hover ~ .overlay,
-.cards-container:hover + .overlay {
-    background: rgba(0,0,0,0.25);
+/* ESCURECE FUNDO AO PASSAR NOS CARDS */
+.cards-container:hover ~ .overlay {
+    background: rgba(0,0,0,0.28);
 }
 
 /* HOVER NO CARD */
 .card-dashboard:hover {
-    transform: scale(1.08);
-    box-shadow: 0 25px 50px rgba(0,0,0,0.35);
+    transform: scale(1.09);
+    box-shadow: 0 28px 55px rgba(0,0,0,0.4);
     z-index: 10;
 }
 
+/* ÍCONE NO HOVER */
 .card-dashboard:hover .icone {
-    font-size: 125px;
-    opacity: 0.32;
-    transform: translate(10px, -10px) rotate(-5deg);
+    font-size: 135px;
+    opacity: 0.42;
+    transform: translate(14px, -14px) rotate(-6deg);
+    filter: drop-shadow(0 0 18px rgba(255,255,255,0.35));
 }
 
 /* DESCRIÇÃO APARECE */
