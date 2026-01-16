@@ -13,19 +13,24 @@
     <img src="{{ url_for('static', filename='logo.png') }}">
 </div>
 
-<!-- OVERLAY PARA ESCURECER FUNDO -->
+<!-- OVERLAY -->
 <div class="overlay"></div>
 
 <!-- TOPO -->
 <div class="topo">
-    <h1>Seja bem-vindo, <span>{{ session['usuario_nome'] }}</span></h1>
+    <h1>
+        Seja bem-vindo,<br>
+        <span>{{ session['usuario_nome'] }}</span>
+    </h1>
 
-    <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+    <div class="topo-acoes">
+        <button class="btn-dark" onclick="toggleDarkMode()">🌙</button>
+        <a href="{{ url_for('logout') }}" class="btn-logout">Sair</a>
+    </div>
 </div>
 
 <!-- DASHBOARD -->
 <div class="dashboard">
-
     <div class="cards-container">
 
         <div class="card card-dashboard estoque" onclick="location.href='{{ url_for('estoque') }}'">
@@ -63,7 +68,6 @@
     </div>
 </div>
 
-    <script src="{{ url_for('static', filename='darkmode.js') }}"></script>
-
+<script src="{{ url_for('static', filename='darkmode.js') }}"></script>
 </body>
 </html>
