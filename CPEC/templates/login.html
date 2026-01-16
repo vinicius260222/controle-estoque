@@ -1,105 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Login - CPEC</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-body {
-    font-family: 'Roboto', sans-serif;
-    background: linear-gradient(135deg, #007bff, #00bfff);
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    overflow: hidden;
-}
-
-.login-container {
-    background: #fff;
-    padding: 50px 35px;
-    border-radius: 15px;
-    box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-    width: 360px;
-    text-align: center;
-    position: relative;
-    animation: fadeIn 1s ease-in-out;
-}
-
-.login-container img {
-    max-width: 180px;
-    margin-bottom: 30px;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-}
-
-.login-container img:hover {
-    transform: scale(1.1);
-}
-
-.login-container h1 {
-    margin-bottom: 25px;
-    font-size: 26px;
-    color: #007bff;
-}
-
-.login-container input {
-    width: 85%;
-    padding: 12px 15px;
-    margin: 12px 0;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.3s;
-}
-
-.login-container input:focus {
-    border-color: #007bff;
-}
-
-.login-container button {
-    width: 88%;
-    padding: 12px;
-    margin-top: 15px;
-    border: none;
-    border-radius: 8px;
-    background: #28a745;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
-}
-
-.login-container button:hover {
-    background: #218838;
-    transform: scale(1.02);
-}
-
-.erro {
-    color: red;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-@keyframes fadeIn {
-    from {opacity:0; transform: translateY(-20px);}
-    to {opacity:1; transform: translateY(0);}
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Login - CPEC</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
 </head>
 <body>
-<div class="login-container">
-    <img src="{{ url_for('static', filename='logo-cpec.png') }}" alt="CPEC Logo">
-    <h1>Login</h1>
-    {% if erro %}<div class="erro">{{ erro }}</div>{% endif %}
-    <form method="POST">
-        <input type="text" name="usuario" placeholder="CPF" required>
-        <input type="password" name="senha" placeholder="Senha" required>
-        <button type="submit">Entrar</button>
-    </form>
+
+<div class="login-page">
+
+    <!-- Fundo gradiente -->
+    <div class="login-background"></div>
+
+    <!-- Conteúdo central -->
+    <div class="login-container">
+        
+        <!-- Logo grande -->
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='logo.png') }}" alt="CPEC Logo">
+            <p class="slogan">Construindo soluções pré-moldadas com qualidade e confiança.</p>
+        </div>
+
+        <!-- Formulário -->
+        <form method="POST" action="{{ url_for('login') }}" class="login-form">
+            {% if erro %}
+                <p class="erro">{{ erro }}</p>
+            {% endif %}
+            <input type="text" name="usuario" placeholder="CPF" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+            <button type="submit">Entrar</button>
+        </form>
+
+    </div>
+
 </div>
+
 </body>
 </html>
